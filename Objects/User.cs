@@ -215,6 +215,47 @@ namespace DateABase.Objects
 
       return foundUser;
     }
+
+    public static GetCurrentUser()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM state;", conn);
+      SqlDataReader rdr = conn ExecuteReader();
+
+      int userId = 0;
+
+      while(rdr.Read())
+      {
+        userId = rdr.GetInt32(1);
+      }
+      User currentUser = User.Find(userId);
+      if(rdr!=null)
+      {
+        rdr.Close();
+      }
+      if(conn!=null)
+      {
+        conn.Close();
+      }
+      return currentUser;
+    }
+
+    public static void SetCurrentUser(User selectedUser)
+    {
+
+    }
+
+    public static User FindByUserName(string userName)
+    {
+      User foundUser = new User("", "");
+      return foundUser;
+    }
+    public static bool CheckLogin(string userName, string password)
+    {
+      return false;
+    }
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
