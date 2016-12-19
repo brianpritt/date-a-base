@@ -24,7 +24,7 @@ namespace DateABase
       };
       Patch["/user/update"] = _ => {
         var currentUser = User.GetCurrentUser();
-        User currentUser.Update(Request.Form("user-name"), Request.Form("user-password"), Request.Form("first-name"), Request.Form("last-name"), Request.Form("zip-code"), Request.Form("email"), Request.Form("tag-line"), Request.Form("phone-number"),Request.Form("about"));
+        currentUser.Edit(Request.Form("user-name"), Request.Form("user-password"), Request.Form("first-name"), Request.Form("last-name"), Request.Form("zip-code"), Request.Form("email"), Request.Form("tag-line"), Request.Form("phone-number"),Request.Form("about"));
         currentUser.Save();
         return View["profile.cshtml", currentUser];
       };
@@ -33,7 +33,6 @@ namespace DateABase
         Dictionary<string, object> model = new Dictionary<string, object>();
         if (loginStatus == true)
         {
-          Dictionary<string, object> model = new Dictionary<string, object>();
           var foundUser = User.FindByUserName();
           User.SetCurrentUser(foundUser);
           User currentUser = User.GetCurrentUser();
