@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<div class="container">
+  @if(Model.ContainsKey("message"))
+  {
+    <h3>@Model["message"]</h3>
+  }
+  <h2>Edit your profile</h2><br>
+  <form action="/user/update" method="post">
+    <input type="hidden" name="_method" value="PATCH">
+    <div class= "form-group">
+      <label for="user-name">User Name</label>
+      <input class = "form-control" type="text" name="user-name" value = "@Model['user'].UserName">
+      <label for="user-password">Password</label>
+      <input class = "form-control" type="text" name="user-password" value = "@Model['user'].Password">
+    </div>
+    <div class= "form-group">
+      <label for="profile-pic">Profile picture</label>
+      <input class = "form-control" type="text" name="profile-pic" value = "@Model['user'].ProfilePic">
+    </div>
+    <div class= "form-group">
+      <label for="first-name">First Name</label>
+      <input class = "form-control" type="text" name="first-name" value = "@Model['user'].FirstName">
+      <label for="last-name">Last Name</label>
+      <input class = "form-control" type="text" name="last-name" value = "@Model['user'].LastName">
+    </div>
+    <div class= "form-group">
+      <label for="zip-code">Zip Code</label>
+      <input class = "form-control" type="text" name="zip-code" value = "@Model['user'].Zipcode">
+      <label for="phone-number">Phone Number</label>
+      <input class = "form-control" type="text" name="phone-number" value = "@Model['user'].PhoneNumber">
+      <label for="email">E-mail</label>
+      <input class = "form-control" type="text" name="email" value = "@Model['user'].Email">
+    </div>
+    <div class= "form-group">
+      <label for="about">About me</label>
+      <textarea rows = "5" cols ="50" class = "form-control" type="textbox" name="about">@Model['user'].AboutMe</textarea>
+    </div>
+    <div class= "form-group">
+      <label for="tag-line">Tag-line</label>
+      <input class = "form-control" type="text" name="tag-line" value = "@Model['user'].TagLine">
+    </div>
+    <button type="submit">Edit</button>
+  </form>
+  <form action="/user/delete" method="post">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit">Delete profile</button>
+  </form>
+</div>
