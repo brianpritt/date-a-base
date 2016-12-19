@@ -215,7 +215,19 @@ namespace DateABase.Objects
 
       return foundUser;
     }
+    public void Delete()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("DELETE FROM users WHERE id = @UserId; DELETE FROM state", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.ExecuteNonQuery();
 
+      if(conn!=null)
+      {
+        conn.Close();
+      }
+    }
     public static void DeleteAll()
     {
       SqlConnection conn = DB.Connection();

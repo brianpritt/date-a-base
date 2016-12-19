@@ -51,6 +51,23 @@ namespace  DateABase
 
       Assert.Equal(expectedUser.UserName, user1.UserName);
     }
+    [Fact]
+    public void Delete_DeletesCurrentUser_true()
+    {
+      User newUser = new User("mamaBear", "honey");
+      newUser.Save();
+      newUser.Delete();
+      List<User> allUsers = User.GetAll();
+      Assert.Equal(0, allUsers.Count);
+    }
+    [Fact]
+    public void Delete_DeletesCurrentUser_false()
+    {
+      User newUser = new User("mamaBear", "honey");
+      newUser.Save();
+      List<User> allUsers = User.GetAll();
+      Assert.Equal(1, allUsers.Count);
+    }
     public void Dispose()
     {
       User.DeleteAll();
