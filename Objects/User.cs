@@ -7,11 +7,11 @@ namespace DateABase.Objects
   public class User
   {
     public int Id  {get; set;}
-    public string Username {get; set;}
+    public string UserName {get; set;}
     public string Password {get; set;}
     public string FirstName {get; set;}
     public string LastName {get; set;}
-    public string Zipcode {get; set;}
+    public string ZipCode {get; set;}
     public string PhoneNumber {get; set;}
     public string Email {get; set;}
     public string AboutMe {get; set;}
@@ -19,14 +19,14 @@ namespace DateABase.Objects
 
     private List<string> UserInput = new List<string>{};
 
-    public User(string username, string password, string firstName, string lastName, string zipcode, string email, string tagLine, string phoneNumber = null, string aboutMe = null, int id = 0)
+    public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = " ", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int id = 0)
     {
       this.Id = id;
-      this.Username = username;
+      this.UserName = username;
       this.Password = password;
       this.FirstName = firstName;
       this.LastName = lastName;
-      this.Zipcode = zipcode;
+      this.ZipCode = zipcode;
       this.PhoneNumber = phoneNumber;
       this.Email = email;
       this.AboutMe = aboutMe;
@@ -44,17 +44,51 @@ namespace DateABase.Objects
         bool idEquality = this.Id == newUser.Id;
         bool firstNameEquality = this.FirstName == newUser.FirstName;
         bool lastNameEquality = this.LastName == newUser.LastName;
-        bool zipcodeEquality = this.Zipcode == newUser.Zipcode;
+        bool zipcodeEquality = this.ZipCode == newUser.ZipCode;
         bool phoneNumberEquality = this.PhoneNumber == newUser.PhoneNumber;
         bool emailEquality = this.Email == newUser.Email;
         bool aboutMeEquality = this.AboutMe == newUser.AboutMe;
         bool tageLineEquality = this.TagLine == newUser.TagLine;
-        bool usernameEquality = this.Username == newUser.Username;
+        bool usernameEquality = this.UserName == newUser.UserName;
         bool passwordEquality = this.Password == newUser.Password;
 
         return (idEquality && firstNameEquality && lastNameEquality && zipcodeEquality && phoneNumberEquality && emailEquality && aboutMeEquality && tageLineEquality && usernameEquality && passwordEquality);
       }
     }
+    public void Save()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO users (first_name, last_name, zip_code, email, phone_number, about_me, tag_line, user_name, password) OUTPUT INSERTED.id VALUES (@FirstName, @LastName, @ZipCode, @Email, @PhoneNumber, @AboutMe, @TagLine, @UserName, @Password);", conn);
+
+      cmd.Parameters.AddWithValue("@FirstName", this.FirstName);
+      cmd.Parameters.AddWithValue("@LastName", this.LastName);
+      cmd.Parameters.AddWithValue("@ZipCode", this.ZipCode);
+      cmd.Parameters.AddWithValue("@Email", this.Email);
+      cmd.Parameters.AddWithValue("@PhoneNumber", this.PhoneNumber);
+      cmd.Parameters.AddWithValue("@AboutMe", this.AboutMe);
+      cmd.Parameters.AddWithValue("@TagLine", this.TagLine);
+      cmd.Parameters.AddWithValue("@UserName", this.UserName);
+      cmd.Parameters.AddWithValue("@Password", this.Password);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+
     public static List<User> GetAll()
     {
       SqlConnection conn = DB.Connection();
@@ -68,15 +102,15 @@ namespace DateABase.Objects
         int userId = rdr.GetInt32(0);
         string userFirstName = rdr.GetString(1);
         string userLastName = rdr.GetString(2);
-        string userZipcode = rdr.GetString(3);
+        string userZipCode = rdr.GetString(3);
         string userPhoneNumber = rdr.GetString(4);
         string userAboutMe = rdr.GetString(5);
         string userEmail = rdr.GetString(6);
         string userTagLine = rdr.GetString(7);
-        string userUsername = rdr.GetString(8);
+        string userUserName = rdr.GetString(8);
         string userPassword = rdr.GetString(9);
 
-        User newUser = new User(userUsername, userPassword, userFirstName, userLastName, userZipcode, userPhoneNumber, userAboutMe, userEmail, userTagLine, userId);
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userPhoneNumber, userAboutMe, userEmail, userTagLine, userId);
         allUsers.Add(newUser);
       }
       if(rdr != null)
@@ -88,6 +122,64 @@ namespace DateABase.Objects
         conn.Close();
       }
       return allUsers;
+    }
+
+    public static User Find(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE id = @UserId;", conn);
+      SqlParameter UserIdParameter = new SqlParameter("@UserId", id.ToString());
+      cmd.Parameters.Add(UserIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundUserId = 0;
+      string foundFirstName = null;
+      string foundLastName = null;
+      string foundZipCode = null;
+      string foundPhoneNumber = null;
+      string foundAboutMe = null;
+      string foundEmail = null;
+      string foundTagLine = null;
+      string foundUserName = null;
+      string foundPassword = null;
+
+      while(rdr.Read())
+      {
+        foundUserId = rdr.GetInt32(0);
+        foundFirstName = rdr.GetString(1);
+        foundLastName = rdr.GetString(2);
+        foundZipCode = rdr.GetString(3);
+        foundPhoneNumber = rdr.GetString(4);
+        foundAboutMe = rdr.GetString(5);
+        foundEmail = rdr.GetString(6);
+        foundTagLine = rdr.GetString(7);
+        foundUserName = rdr.GetString(8);
+        foundPassword = rdr.GetString(9);
+
+      }
+      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundUserId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return foundUser;
+    }
+
+    public static void DeleteAll()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("DELETE FROM users;", conn);
+      cmd.ExecuteNonQuery();
+      conn.Close();
     }
   }
 }
