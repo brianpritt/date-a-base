@@ -2,7 +2,10 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
-
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
 <div class="container">
   <h2>Welcome to Date-A-Base</h2><br>
   <form action="/sign-in" method="post">
