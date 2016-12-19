@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<div class="container">
+  @if(Model.ContainsKey("message"))
+  {
+    <h3>@Model["message"]</h3>
+  }
+  <h2>Profiles</h2><br>
+    @foreach(var profile in Model["profiles"])
+    {
+      <h2><a href="@profile.Id">@profile.Name</a></h2>
+      <span class = "profile-list-img"><img src="@profile.ProfilePic" alt=""></span>
+      <h4>@profile.TagLine</h4>
+    }
+
+  <form action="tag/search" method="post">
+    <label for="tag"></label>
+    <input type="text" name="tag">
+
+    <button type="submit">Search</button>
+  </form>
+</div>

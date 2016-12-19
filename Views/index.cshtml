@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+
+<div class="container">
+  <h2>Welcome to Date-A-Base</h2><br>
+  <form action="/sign-in" method="post">
+    <label for="user-name"></label>
+    <input type="text" name="user-name">
+    <label for="user-password"></label>
+    <input type="text" name="user-password">
+    <button type="submit">Sign-In</button>
+  </form>
+
+  <form action="/sign-up" method="post">
+    <label for="new-user-name"></label>
+    <input type="text" name="new-user-name">
+    <label for="new-user-password"></label>
+    <input type="text" name="new-user-password">
+    <button type="submit">Sign-Up</button>
+  </form>
+</div>
