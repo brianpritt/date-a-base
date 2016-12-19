@@ -41,6 +41,16 @@ namespace  DateABase
 
       Assert.Equal(user1, foundUser);
     }
+    [Fact]
+    public void Edit_EditCorrectUser()
+    {
+      User user1 = new User("mammaBear", "honey");
+      user1.Save();
+      user1.Edit("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
+      User expectedUser = new User("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
+
+      Assert.Equal(expectedUser.UserName, user1.UserName);
+    }
     public void Dispose()
     {
       User.DeleteAll();

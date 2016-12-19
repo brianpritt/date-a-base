@@ -123,6 +123,49 @@ namespace DateABase.Objects
       }
       return allUsers;
     }
+    public void Edit(string userName, string password, string firstName, string lastName, string zipCode, string email, string tagLine, string phoneNumber, string aboutMe)
+    {
+      Console.WriteLine(userName);
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE users SET first_name = @FirstName, last_name = @LastName, zip_code= @ZipCode, email= @Email, phone_number= @PhoneNumber, about_me= @AboutMe, tag_line= @TagLine, user_name= @UserName, password= @Password OUTPUT INSERTED.id, INSERTED.user_name, INSERTED.password, INSERTED.first_name, INSERTED.last_name, INSERTED.zip_code, INSERTED.phone_number, INSERTED.email, INSERTED.about_me, INSERTED.tag_line WHERE id = @UserId;", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@FirstName", firstName);
+      cmd.Parameters.AddWithValue("@LastName", lastName);
+      cmd.Parameters.AddWithValue("@ZipCode", zipCode);
+      cmd.Parameters.AddWithValue("@Email", email);
+      cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+      cmd.Parameters.AddWithValue("@AboutMe", aboutMe);
+      cmd.Parameters.AddWithValue("@TagLine", tagLine);
+      cmd.Parameters.AddWithValue("@UserName", userName);
+      cmd.Parameters.AddWithValue("@Password", password);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+        this.UserName = rdr.GetString(1);
+        this.Password = rdr.GetString(2);
+        this.FirstName = rdr.GetString(3);
+        this.LastName = rdr.GetString(4);
+        this.ZipCode = rdr.GetString(5);
+        this.PhoneNumber = rdr.GetString(6);
+        this.Email = rdr.GetString(7);
+        this.AboutMe = rdr.GetString(8);
+        this.TagLine = rdr.GetString(9);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public static User Find(int id)
     {
