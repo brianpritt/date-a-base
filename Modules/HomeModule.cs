@@ -10,17 +10,19 @@ namespace DateABase
     public HomeModule()
     {
       Get["/"] =_=>{
-        return View["index.cshtml"];
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        return View["index.cshtml",model];
       };
       Post["/sign-up"] =_=>{
-        User newUser = new User(Request.Form("new-user-name"), Request.Form("new-user-password"));
+        User newUser = new User(Request.Form["new-user-name"], Request.Form["new-user-password"]);
         newUser.Save();
         User.SetCurrentUser(newUser);
         Dictionary<string, object> model = new Dictionary<string, object>();
         var currentUser = User.GetCurrentUser();
         model.Add("message", "Create new Profile");
-        model.Add("user", currrentUser);
-        return View["edit_profile.csthml", model];
+        model.Add("user", currentUser);
+        // Console.WriteLine(model["user"].UserName);
+        return View["edit_profile.cshtml", model];
       };
       Patch["/user/update"] = _ => {
         var currentUser = User.GetCurrentUser();
@@ -29,11 +31,13 @@ namespace DateABase
         return View["profile.cshtml", currentUser];
       };
       Post["/sign-in"] = _ =>{
-        bool loginStatus = User.CheckLogin(Request.Form("user-name"), Request.Form("user-password"));
+        string userName = Request.Form("user-name");
+        string userPassword = Request.Form("user-password");
+        bool loginStatus = User.CheckLogin(Request.Form(userName), Request.Form(userPassword));
         Dictionary<string, object> model = new Dictionary<string, object>();
         if (loginStatus == true)
         {
-          var foundUser = User.FindByUserName();
+          var foundUser = User.FindByUserName(userName);
           User.SetCurrentUser(foundUser);
           User currentUser = User.GetCurrentUser();
           model.Add("message", "Welcome!");
