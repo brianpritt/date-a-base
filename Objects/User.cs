@@ -19,7 +19,7 @@ namespace DateABase.Objects
 
     private List<string> UserInput = new List<string>{};
 
-    public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = "44313", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int id = 0)
+    public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = " ", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int id = 0)
     {
       this.Id = id;
       this.UserName = username;
