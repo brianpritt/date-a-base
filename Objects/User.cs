@@ -321,8 +321,41 @@ namespace DateABase.Objects
 
       return foundUser;
     }
+
     public static bool CheckLogin(string userName, string password)
     {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT (user_name, password) FROM users WHERE user_name = @UserName, password = @Password;", conn);
+      cmd.Parameters.AddWithValue("@UserName", userName);
+      cmd.Parameters.AddWithValue("@Password", password);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      string loginUserName = null;
+      string loginPassword = null;
+
+      while(rdr.Read())
+      {
+        loginUserName = rdr.GetString(1);
+        loginPassword = rdr.GetString(2);
+      }
+      User userLogin = new User(loginUserName, loginPassword);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      if ((loginUserName == userName) && (loginPassword == password))
+      {
+        return true;
+      }
       return false;
     }
     public void Delete()
