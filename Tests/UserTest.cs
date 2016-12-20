@@ -68,6 +68,33 @@ namespace  DateABase
       List<User> allUsers = User.GetAll();
       Assert.Equal(1, allUsers.Count);
     }
+    [Fact]
+    public void GetCurrentUser_GetsCurrentUserFromState()
+    {
+      User newUser = new User("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
+      newUser.Save();
+      User.SetCurrentUser(newUser);
+
+      User selectedUser = User.GetCurrentUser();
+
+      Assert.Equal(newUser.UserName, selectedUser.UserName);
+
+    }
+    [Fact]
+    public void GetCurrentUser_ChangesCurrentUserFromState()
+    {
+      User newUser = new User("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
+      User newCurrentUser = new User("mamaBear", "honey", " ", " ", " ", " ", " ", " ", " ");
+      User.SetCurrentUser(newUser);
+      newUser.Save();
+      newCurrentUser.Save();
+      User.ChangeCurrentUser(newCurrentUser);
+
+      User selectedUser = User.GetCurrentUser();
+
+      Assert.Equal(newCurrentUser.UserName, selectedUser.UserName);
+
+    }
     public void Dispose()
     {
       User.DeleteAll();
