@@ -327,7 +327,7 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT (user_name, password) FROM users WHERE user_name = @UserName, password = @Password;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT user_name, password FROM users WHERE user_name = @UserName AND password = @Password;", conn);
       cmd.Parameters.AddWithValue("@UserName", userName);
       cmd.Parameters.AddWithValue("@Password", password);
       SqlDataReader rdr = cmd.ExecuteReader();
@@ -337,8 +337,8 @@ namespace DateABase.Objects
 
       while(rdr.Read())
       {
-        loginUserName = rdr.GetString(1);
-        loginPassword = rdr.GetString(2);
+        loginUserName = rdr.GetString(0);
+        loginPassword = rdr.GetString(1);
       }
       User userLogin = new User(loginUserName, loginPassword);
 
