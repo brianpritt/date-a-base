@@ -2,9 +2,8 @@ using Nancy;
 using System.Collections.Generic;
 using System;
 
-using System.Windows.Forms;
-using System.Windows.Forms.MessageBox;
 
+using System.Windows.Forms;
 using DateABase.Objects;
 
 namespace DateABase
@@ -62,23 +61,19 @@ namespace DateABase
         return View["profile.cshtml", model];
       };
       Delete["/user/delete"] = _ => {
-        string message = "Are you sure you'd like to delete your account?";
-        string caption = "Delete Profile";
-        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-        DialogResult confirmDelete = MessageBox.Show(message, caption, buttons);
-        if(confirmDelete == System.Windows.Forms.DialogResult.Yes)
-        {
-          User currentUser = User.GetCurrentUser();
-          currentUser.Delete();
-          return View["index.cshtml"];
-        }
-        else {
+        User currentUser = User.GetCurrentUser();
+        currentUser.Delete();
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("message", "Profile Deleted!");
+        return View["index.cshtml"];
+      };
+      Get["/user/delete/cancel"]=_=>{
           Dictionary<string, object> model = new Dictionary<string, object>();
-          User currentUser = User.GetCurrentUser();
+          User currentUser = User.GetCurrentUser(); 
           model.Add("user", currentUser);
           return View["profile.cshtml", model];
-        }
       };
+
       Get["/users"] = _ => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         List<User> allUsers = User.GetAll();

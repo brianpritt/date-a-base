@@ -34,7 +34,7 @@
       <input class = "form-control" type="text" name="email" value = "@user.Email">
     </div>
     <div class= "form-group">
-      <label for="about">About me <span id="count_message"></span></label>
+      <label for="about">About me: <span id="count_message"></span></label>
       <textarea rows = "5" cols ="50" class = "form-control" type="textbox" name="about">@user.AboutMe</textarea>
     </div>
     <div class= "form-group">
@@ -50,8 +50,12 @@
       <button type="submit" class="btn btn-info">Create</button>
     }
   </form>
-  <form action="/user/delete" method="post">
+  <button id = "delete" class="btn btn-danger" type="button" name="delete">Delete Profile</button>
+  <form class="hidden-button" action="/user/delete" method="post">
     <input type="hidden" name="_method" value="DELETE">
-    <button type="submit" class="btn btn-info">Delete profile</button>
+    <button type="submit" class="btn btn-danger">Confirm</button>
   </form>
+  <button class="hidden-button btn btn-info" type="button" name="button"><a href="/user/delete/cancel">Cancel</a></button>
+
+
 </div>
