@@ -125,7 +125,6 @@ namespace DateABase.Objects
     }
     public void Edit(string userName, string password, string firstName, string lastName, string zipCode, string email, string tagLine, string phoneNumber, string aboutMe)
     {
-      Console.WriteLine(userName);
       SqlConnection conn = DB.Connection();
       conn.Open();
 
@@ -216,21 +215,20 @@ namespace DateABase.Objects
       return foundUser;
     }
 
-    public static GetCurrentUser()
+    public static User GetCurrentUser()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-
-      SqlCommand cmd = new SqlCommand("SELECT * FROM state;", conn);
-      SqlDataReader rdr = conn ExecuteReader();
-
+      SqlCommand cmd = new SqlCommand("SELECT user_id FROM state;", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
       int userId = 0;
 
       while(rdr.Read())
       {
-        userId = rdr.GetInt32(1);
+        userId = rdr.GetInt32(0);
       }
       User currentUser = User.Find(userId);
+
       if(rdr!=null)
       {
         rdr.Close();
@@ -241,10 +239,36 @@ namespace DateABase.Objects
       }
       return currentUser;
     }
-
     public static void SetCurrentUser(User selectedUser)
     {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
 
+      SqlCommand cmd = new SqlCommand("INSERT INTO state (user_id) VALUES (@UserId);", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", selectedUser.Id.ToString());
+      cmd.ExecuteNonQuery();
+
+
+      if(conn!=null)
+      {
+        conn.Close();
+      }
+    }
+    public static void ChangeCurrentUser(User selectedUser)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("UPDATE state SET user_id = @UserId;", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", selectedUser.Id.ToString());
+      cmd.ExecuteNonQuery();
+
+      if(conn!=null)
+      {
+        conn.Close();
+      }
     }
 
     public static User FindByUserName(string userName)
@@ -273,7 +297,7 @@ namespace DateABase.Objects
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM users;", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM users; DELETE FROM state", conn);
       cmd.ExecuteNonQuery();
       conn.Close();
     }
