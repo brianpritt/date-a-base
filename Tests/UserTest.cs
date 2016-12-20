@@ -79,7 +79,6 @@ namespace  DateABase
       User selectedUser = User.GetCurrentUser();
 
       Assert.Equal(newUser.UserName, selectedUser.UserName);
-
     }
 
     [Fact]
@@ -95,8 +94,30 @@ namespace  DateABase
       User selectedUser = User.GetCurrentUser();
 
       Assert.Equal(newCurrentUser.UserName, selectedUser.UserName);
-
     }
+    [Fact]
+    public void FindByUserName_FindUserInDataBase()
+    {
+      User user1 = new User("mammaBear", "honey");
+      user1.Save();
+      User user2 = new User("DogMan", "bark");
+      user2.Save();
+
+      User foundUser = User.FindByUserName("DogMan");
+
+      Assert.Equal(user2, foundUser);
+    }
+    [Fact]
+    public void FindByUserName_CheckLogin()
+    {
+      User user1 = new User("Taylor", "honda");
+      user1.Save();
+
+      bool correctUser = User.CheckLogin("Taylor", "honda");
+
+      Assert.Equal(correctUser, true);
+    }
+
     public void Dispose()
     {
       User.DeleteAll();

@@ -275,11 +275,87 @@ namespace DateABase.Objects
 
     public static User FindByUserName(string userName)
     {
-      User foundUser = new User("", "");
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE user_name = @UserName;", conn);
+      SqlParameter UserIdParameter = new SqlParameter("@UserName", userName.ToString());
+      cmd.Parameters.Add(UserIdParameter);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      int foundUserId = 0;
+      string foundFirstName = null;
+      string foundLastName = null;
+      string foundZipCode = null;
+      string foundPhoneNumber = null;
+      string foundAboutMe = null;
+      string foundEmail = null;
+      string foundTagLine = null;
+      string foundUserName = null;
+      string foundPassword = null;
+
+      while(rdr.Read())
+      {
+        foundUserId = rdr.GetInt32(0);
+        foundFirstName = rdr.GetString(1);
+        foundLastName = rdr.GetString(2);
+        foundZipCode = rdr.GetString(3);
+        foundPhoneNumber = rdr.GetString(4);
+        foundAboutMe = rdr.GetString(5);
+        foundEmail = rdr.GetString(6);
+        foundTagLine = rdr.GetString(7);
+        foundUserName = rdr.GetString(8);
+        foundPassword = rdr.GetString(9);
+
+      }
+      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundUserId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
       return foundUser;
     }
+
     public static bool CheckLogin(string userName, string password)
     {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT user_name, password FROM users WHERE user_name = @UserName AND password = @Password;", conn);
+      cmd.Parameters.AddWithValue("@UserName", userName);
+      cmd.Parameters.AddWithValue("@Password", password);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      string loginUserName = null;
+      string loginPassword = null;
+
+      while(rdr.Read())
+      {
+        loginUserName = rdr.GetString(0);
+        loginPassword = rdr.GetString(1);
+      }
+      User userLogin = new User(loginUserName, loginPassword);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      if ((loginUserName == userName) && (loginPassword == password))
+      {
+        return true;
+      }
       return false;
     }
     public void Delete()
