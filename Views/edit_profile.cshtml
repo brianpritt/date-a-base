@@ -2,48 +2,56 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
-
+@{
+  var user = Model["user"];
+}
 <div class="container">
   @if(Model.ContainsKey("message"))
   {
-    <h3>@Model["message"]</h3>
+    <h2>@Model["message"]</h2>
   }
-  <h2>Edit your profile</h2><br>
   <form action="/user/update" method="post">
     <input type="hidden" name="_method" value="PATCH">
     <div class= "form-group">
       <label for="user-name">User Name</label>
-      <input class = "form-control" type="text" name="user-name" value ='@Model["user"].UserName'>
+      <input class = "form-control" type="text" name="user-name" value =@user.UserName>
       <label for="user-password">Password</label>
-      <input class = "form-control" type="text" name="user-password" placeholder = "@Model["user"].Password">
+      <input class = "form-control" type="password" name="user-password" value = "@user.Password">
     </div>
 
     <div class= "form-group">
       <label for="first-name">First Name</label>
-      <input class = "form-control" type="text" name="first-name" value = "@Model["user"].FirstName">
+      <input class = "form-control" type="text" name="first-name" value = "@user.FirstName">
       <label for="last-name">Last Name</label>
-      <input class = "form-control" type="text" name="last-name" value = "@Model["user"].LastName">
+      <input class = "form-control" type="text" name="last-name" value = "@user.LastName">
     </div>
     <div class= "form-group">
       <label for="zip-code">Zip Code</label>
-      <input class = "form-control" type="text" name="zip-code" value = "@Model["user"].ZipCode">
+      <input class = "form-control" type="text" name="zip-code" value = "@user.ZipCode">
       <label for="phone-number">Phone Number</label>
-      <input class = "form-control" type="text" name="phone-number" value = "@Model["user"].PhoneNumber">
+      <input class = "form-control" type="text" name="phone-number" value = "@user.PhoneNumber">
       <label for="email">E-mail</label>
-      <input class = "form-control" type="text" name="email" value = "@Model["user"].Email">
+      <input class = "form-control" type="text" name="email" value = "@user.Email">
     </div>
     <div class= "form-group">
-      <label for="about">About me</label>
-      <textarea rows = "5" cols ="50" class = "form-control" type="textbox" name="about">@Model["user"].AboutMe</textarea>
+      <label for="about">About me <span id="count_message"></span></label>
+      <textarea rows = "5" cols ="50" class = "form-control" type="textbox" name="about">@user.AboutMe</textarea>
     </div>
     <div class= "form-group">
       <label for="tag-line">Tag-line</label>
-      <input class = "form-control" type="text" name="tag-line" value = "@Model["user"].TagLine">
+      <input class = "form-control" type="text" name="tag-line" value = "@user.TagLine">
     </div>
-    <button type="submit">Edit</button>
+    @if(Model["message"] == "Edit profile")
+    {
+      <button type="submit" class="btn btn-info">Edit</button>
+    }
+    @if(Model["message"] == "Create new profile")
+    {
+      <button type="submit" class="btn btn-info">Create</button>
+    }
   </form>
   <form action="/user/delete" method="post">
     <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Delete profile</button>
+    <button type="submit" class="btn btn-info">Delete profile</button>
   </form>
 </div>

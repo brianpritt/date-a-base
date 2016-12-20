@@ -68,6 +68,7 @@ namespace  DateABase
       List<User> allUsers = User.GetAll();
       Assert.Equal(1, allUsers.Count);
     }
+    
     [Fact]
     public void GetCurrentUser_GetsCurrentUserFromState()
     {
@@ -80,6 +81,7 @@ namespace  DateABase
       Assert.Equal(newUser.UserName, selectedUser.UserName);
 
     }
+
     [Fact]
     public void GetCurrentUser_ChangesCurrentUserFromState()
     {
