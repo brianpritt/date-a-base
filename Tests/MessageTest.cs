@@ -93,6 +93,15 @@ namespace  DateABase
       List<Message> allSentMessages = user1.GetCorrespondenceFromDater(user2);
       Assert.Equal(2, allSentMessages.Count);
     }
+    [Fact]
+    public void Delete_DeletsMessageFromDB_true()
+    {
+      Message newMessage = new Message(0, 0, "hello there! I'd like to byte your bits...");
+      newMessage.Save();
+      newMessage.Delete();
+      List<Message> allMessages = Message.GetAll();
+      Assert.Equal(0, allMessages.Count);
+    }
 
     public void Dispose()
     {

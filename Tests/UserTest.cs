@@ -68,7 +68,7 @@ namespace  DateABase
       List<User> allUsers = User.GetAll();
       Assert.Equal(1, allUsers.Count);
     }
-    
+
     [Fact]
     public void GetCurrentUser_GetsCurrentUserFromState()
     {
@@ -116,6 +116,18 @@ namespace  DateABase
       bool correctUser = User.CheckLogin("Taylor", "honda");
 
       Assert.Equal(correctUser, true);
+    }
+    [Fact]
+    public void CheckUserName_CheckIfUserNameExists_true()
+    {
+      User user1 = new User("mammaBear", "honey");
+      user1.Save();
+      User user2 = new User("DogMan", "bark");
+      user2.Save();
+      User user3 = new User("mammaBear", "honey");
+      bool userNameExists = User.CheckUserName(user3.UserName);
+      Assert.Equal(true, userNameExists);
+
     }
 
     public void Dispose()

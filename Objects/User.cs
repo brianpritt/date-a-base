@@ -583,7 +583,7 @@ namespace DateABase.Objects
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM users WHERE id = @UserId; DELETE FROM state", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM users WHERE id = @UserId; DELETE FROM state; DELETE FROM messages WHERE sender_id = @UserId OR receiver_id = @UserId", conn);
       cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.ExecuteNonQuery();
 
