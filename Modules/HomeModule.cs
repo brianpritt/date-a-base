@@ -75,7 +75,7 @@ namespace DateABase
 
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
-        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"]);
+        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"], Request.Form["gender"], Request.Form["seek-gender"]);
         Dictionary<string, object> model = new Dictionary<string, object>();
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
@@ -112,6 +112,16 @@ namespace DateABase
         messageDictionary.Add("userList", allUsers);
         return View["message_center.cshtml", messageDictionary];
       };
+      Get["/user/messages/read"]= _ =>{
+        User currentUser = User.GetCurrentUser();
+        List<Message> allReadMessages = currentUser.GetAllReadMessages();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        List<User> allUsers = User.GetAll();
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allReadMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml", messageDictionary];
+      };
       Get["/user/{id}/message/send"] = parameters =>{
         User sendingUser = User.GetCurrentUser();
         User receivingUser = User.Find(parameters.id);
@@ -141,11 +151,19 @@ namespace DateABase
         Message currentMessage = Message.Find(parameters.Id);
         User senderUser = User.Find(currentMessage.SenderId);
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
-        messageDictionary.Add("current", currentMessage);
+        messageDictionary.Add("user", currentMessage);
         messageDictionary.Add("sender", senderUser);
         messageDictionary.Add("receiver", receivingUser);
         currentMessage.MarkViewed();
         return View["view_message.cshtml", messageDictionary];
+      };
+      Get["/user/messages/{id}/reply"] =parameters =>{
+        User sendingUser = User.GetCurrentUser();
+        User receivingUser = User.Find(parameters.id);
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("sender", sendingUser);
+        messageDictionary.Add("receiver", receivingUser);
+        return View["create_message.cshtml", messageDictionary];
       };
     }
   }
