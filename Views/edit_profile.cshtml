@@ -6,10 +6,7 @@
   var user = Model["user"];
 }
 <div class="container">
-  @if(Model.ContainsKey("message"))
-  {
-    <h2>@Model["message"]</h2>
-  }
+
   <form action="/user/update" method="post">
     <input type="hidden" name="_method" value="PATCH">
     <div class= "form-group">
@@ -18,12 +15,11 @@
       <label for="user-password">Password</label>
       <input class = "form-control" type="password" name="user-password" value = "@user.Password">
     </div>
-
     <div class= "form-group">
       <label for="first-name">First Name</label>
-      <input class = "form-control" type="text" name="first-name" value = "@user.FirstName">
+      <input class = "form-control" type="text" name="first-name" value = "@user.FirstName" required>
       <label for="last-name">Last Name</label>
-      <input class = "form-control" type="text" name="last-name" value = "@user.LastName">
+      <input class = "form-control" type="text" name="last-name" value = "@user.LastName" required>
     </div>
     <div class= "form-group">
       <label for="zip-code">Zip Code</label>
@@ -43,7 +39,7 @@
     </div>
     @if(Model["message"] == "Edit profile")
     {
-      <button type="submit" class="btn btn-info">Edit</button>
+      <button type="submit" class="btn btn-info">Update Profile</button>
     }
     @if(Model["message"] == "Create new profile")
     {
