@@ -64,11 +64,17 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         User selectedUser = User.Find(parameters.id);
         model.Add("user", selectedUser);
+        bool isUsersProfile = false;
+        if (currentUser.Id == parameters.id)
+        {
+          isUsersProfile = true;
+        }
+        model.Add("state", isUsersProfile);
         return View["profile.cshtml", model];
       };
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
-        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"], Request.Form["phone-number"], Request.Form["email"], Request.Form["about"],Request.Form["tag-line"]);
+        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"]);
         Dictionary<string, object> model = new Dictionary<string, object>();
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
