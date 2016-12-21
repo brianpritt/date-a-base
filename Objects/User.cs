@@ -322,6 +322,198 @@ namespace DateABase.Objects
       return foundUser;
     }
 
+    public List<Message> GetAllReceivedMessages()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE receiver_id = @ReceiverId;", conn);
+      cmd.Parameters.AddWithValue("@ReceiverId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Message> allMessages = new List<Message>{};
+
+      while(rdr.Read())
+      {
+        int messageId = rdr.GetInt32(0);
+        int messageSenderId = rdr.GetInt32(1);
+        int messageReceiverId = rdr.GetInt32(2);
+        string messageBody = rdr.GetString(3);
+        bool messageViewed = rdr.GetBoolean(4);
+
+        Message newMessage = new Message(messageSenderId, messageReceiverId, messageBody, messageViewed, messageId);
+        allMessages.Add(newMessage);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
+
+    public List<Message> GetAllSentMessages()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE sender_id = @SenderId;", conn);
+      cmd.Parameters.AddWithValue("@SenderId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Message> allMessages = new List<Message>{};
+
+      while(rdr.Read())
+      {
+        int messageId = rdr.GetInt32(0);
+        int messageSenderId = rdr.GetInt32(1);
+        int messageReceiverId = rdr.GetInt32(2);
+        string messageBody = rdr.GetString(3);
+        bool messageViewed = rdr.GetBoolean(4);
+
+        Message newMessage = new Message(messageSenderId, messageReceiverId, messageBody, messageViewed, messageId);
+        allMessages.Add(newMessage);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
+
+    public List<Message> GetCorrespondenceFromDater(User sender)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE (sender_id = @SenderId AND receiver_id = @CurrentUserId) OR (sender_id = @CurrentUserId AND receiver_id = @SenderId);", conn);
+      cmd.Parameters.AddWithValue("@CurrentUserId", this.Id);
+      cmd.Parameters.AddWithValue("@SenderId", sender.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Message> allMessages = new List<Message>{};
+
+      while(rdr.Read())
+      {
+        int messageId = rdr.GetInt32(0);
+        int messageSenderId = rdr.GetInt32(1);
+        int messageReceiverId = rdr.GetInt32(2);
+        string messageBody = rdr.GetString(3);
+        bool messageViewed = rdr.GetBoolean(4);
+
+        Message newMessage = new Message(messageSenderId, messageReceiverId, messageBody, messageViewed, messageId);
+        allMessages.Add(newMessage);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
+
+    public List<Message> GetAllUnreadMessages()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE viewed = 0 AND receiver_id = @ReceiverId;", conn);
+      cmd.Parameters.AddWithValue("@ReceiverId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Message> allMessages = new List<Message>{};
+
+      while(rdr.Read())
+      {
+        int messageId = rdr.GetInt32(0);
+        int messageSenderId = rdr.GetInt32(1);
+        int messageReceiverId = rdr.GetInt32(2);
+        string messageBody = rdr.GetString(3);
+        bool messageViewed = rdr.GetBoolean(4);
+
+        Message newMessage = new Message(messageSenderId, messageReceiverId, messageBody, messageViewed, messageId);
+        allMessages.Add(newMessage);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
+
+    public List<Message> GetAllReadMessages()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE viewed = 1 AND receiver_id = @ReceiverId;", conn);
+      cmd.Parameters.AddWithValue("@ReceiverId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Message> allMessages = new List<Message>{};
+
+      while(rdr.Read())
+      {
+        int messageId = rdr.GetInt32(0);
+        int messageSenderId = rdr.GetInt32(1);
+        int messageReceiverId = rdr.GetInt32(2);
+        string messageBody = rdr.GetString(3);
+        bool messageViewed = rdr.GetBoolean(4);
+
+        Message newMessage = new Message(messageSenderId, messageReceiverId, messageBody, messageViewed, messageId);
+        allMessages.Add(newMessage);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
+
+    public List<Message> FindMessagesByUserName(string userName)
+    {
+      List<Message> messageList = new List<Message>{};
+      User selectedUser = User.FindByUserName(userName);
+      int userId = selectedUser.Id;
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM messages WHERE sender_id = @SenderId AND receiver_id = @ReceiverId; SELECT * FROM messages WHERE receiver_id = @SenderId AND sender_id = @ReceiverId", conn);
+      cmd.Parameters.AddWithValue("@SenderId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@ReceiverId", selectedUser.Id.ToString());
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        int foundMessageId = rdr.GetInt32(0);
+        int foundSenderId = rdr.GetInt32(1);
+        int foundReceiverId = rdr.GetInt32(2);
+        string foundMessageBody = rdr.GetString(3);
+        bool foundViewed = rdr.GetBoolean(4);
+        Message foundMessage = new Message(foundSenderId, foundReceiverId, foundMessageBody, foundViewed, foundMessageId);
+        messageList.Add(foundMessage);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return messageList;
+    }
     public static bool CheckLogin(string userName, string password)
     {
       SqlConnection conn = DB.Connection();
@@ -358,11 +550,40 @@ namespace DateABase.Objects
       }
       return false;
     }
+    public static bool CheckUserName(string newUserName)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT user_name FROM users WHERE user_name = @NewUserName;", conn);
+      cmd.Parameters.AddWithValue("@NewUserName", newUserName);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      string foundUserName = null;
+      bool userNameExists = false;
+      while(rdr.Read())
+      {
+        foundUserName = rdr.GetString(0);
+        if(foundUserName != null)
+        {
+          userNameExists = true;
+        }
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return userNameExists;
+    }
     public void Delete()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM users WHERE id = @UserId; DELETE FROM state", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM users WHERE id = @UserId; DELETE FROM state; DELETE FROM messages WHERE sender_id = @UserId OR receiver_id = @UserId", conn);
       cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.ExecuteNonQuery();
 
