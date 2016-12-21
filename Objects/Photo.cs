@@ -41,11 +41,11 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO photos (sender_id, body, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
 
+      cmd.Parameters.AddWithValue("@UserId", this.UserId);
       cmd.Parameters.AddWithValue("@Url", this.Url);
       cmd.Parameters.AddWithValue("@Profile", this.Profile);
-      cmd.Parameters.AddWithValue("@UserId", this.UserId);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -75,10 +75,10 @@ namespace DateABase.Objects
       {
         int photoId = rdr.GetInt32(0);
         int userId = rdr.GetInt32(1);
-        string body = rdr.GetString(3);
-        bool profile = rdr.GetBoolean(4);
+        string url = rdr.GetString(2);
+        bool profile = rdr.GetBoolean(3);
 
-        Photo newPhoto = new Photo(userId, body, profile, photoId);
+        Photo newPhoto = new Photo(userId, url, profile, photoId);
         allPhotos.Add(newPhoto);
       }
       if(rdr != null)
@@ -91,26 +91,18 @@ namespace DateABase.Objects
       }
       return allPhotos;
     }
-    public void MakeProfile()
+    public void MakeProfile(int userId)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("UPDATE photos SET profile = @Profile, OUTPUT INSERTED.profile WHERE id = @PhotoId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE photos SET profile = 0 WHERE profile = 1 AND user_id = @UserId; UPDATE photos SET profile = 1 WHERE id = @PhotoId; ", conn);
 
       cmd.Parameters.AddWithValue("@PhotoId", this.Id.ToString());
-      cmd.Parameters.AddWithValue("@Profile", 1);
+      cmd.Parameters.AddWithValue("@UserId", userId.ToString());
+      this.Profile = true;
+      cmd.ExecuteNonQuery();
 
-      SqlDataReader rdr = cmd.ExecuteReader();
-
-      while(rdr.Read())
-      {
-        this.Profile = rdr.GetBoolean(0);
-      }
-      if (rdr != null)
-      {
-        rdr.Close();
-      }
       if (conn != null)
       {
         conn.Close();
@@ -136,8 +128,8 @@ namespace DateABase.Objects
       {
         foundPhotoId = rdr.GetInt32(0);
         foundUserId = rdr.GetInt32(1);
-        foundUrl = rdr.GetString(3);
-        foundProfile = rdr.GetBoolean(4);
+        foundUrl = rdr.GetString(2);
+        foundProfile = rdr.GetBoolean(3);
 
       }
       Photo foundPhoto = new Photo(foundUserId, foundUrl, foundProfile, foundPhotoId);
@@ -153,8 +145,6 @@ namespace DateABase.Objects
 
       return foundPhoto;
     }
-
-
 
     public void Delete()
     {
