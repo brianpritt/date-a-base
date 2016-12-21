@@ -88,6 +88,61 @@ namespace DateABase.Objects
       }
     }
 
+    public void AddPhoto(Photo newPhoto)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
+      cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    public List<Photo> GetAllPhotos()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Photo> allPhotos = new List<Photo>{};
+
+      while(rdr.Read())
+      {
+        int photoId = rdr.GetInt32(0);
+        int userId = rdr.GetInt32(1);
+        string photoUrl = rdr.GetString(3);
+        bool profile = rdr.GetBoolean(4);
+
+        Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
+        allPhotos.Add(newPhoto);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
 
     public static List<User> GetAll()
     {
