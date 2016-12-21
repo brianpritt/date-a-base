@@ -100,7 +100,51 @@ namespace DateABase
         model.Add("users", allUsers);
         return View["profiles.cshtml", model];
       };
-
+      Get["/user/messages"]= _ =>{
+        User currentUser = User.GetCurrentUser();
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        List<User> allUsers = User.GetAll();
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allUnreadMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml", messageDictionary];
+      };
+      Get["/user/{id}/message/send"] = parameters =>{
+        User sendingUser = User.GetCurrentUser();
+        User receivingUser = User.Find(parameters.id);
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("sender", sendingUser);
+        messageDictionary.Add("receiver", receivingUser);
+        return View["create_message.cshtml", messageDictionary];
+      };
+      Post["user/message/send"] = _ => {
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        User senderUser = User.Find(Request.Form["sender"]);
+        User receiverUser = User.Find(Request.Form["receiver"]);
+        string messageText = Request.Form["message-text"];
+        bool viewed = false;
+        Message newMessage = new Message(senderUser.Id, receiverUser.Id, messageText, viewed);
+        newMessage.Save();
+        List<Message> allUnreadMessages = senderUser.GetAllUnreadMessages();
+        List<User> allUsers = User.GetAll();
+        messageDictionary.Add("message", "Message Sent");
+        messageDictionary.Add("user", senderUser);
+        messageDictionary.Add("messageList", allUnreadMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml", messageDictionary];
+      };
+      Get["user/messages/{id}"] = parameters => {
+        User receivingUser = User.GetCurrentUser();
+        Message currentMessage = Message.Find(parameters.Id);
+        User senderUser = User.Find(currentMessage.SenderId);
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("current", currentMessage);
+        messageDictionary.Add("sender", senderUser);
+        messageDictionary.Add("receiver", receivingUser);
+        currentMessage.MarkViewed();
+        return View["view_message.cshtml", messageDictionary];
+      };
     }
   }
 }
