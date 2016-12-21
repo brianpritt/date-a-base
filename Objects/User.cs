@@ -88,61 +88,7 @@ namespace DateABase.Objects
       }
     }
 
-    public void AddPhoto(Photo newPhoto)
-    {
-      SqlConnection conn = DB.Connection();
-      conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
-
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
-      cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
-      cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
-
-      SqlDataReader rdr = cmd.ExecuteReader();
-
-      while(rdr.Read())
-      {
-        this.Id = rdr.GetInt32(0);
-      }
-      if (rdr != null)
-      {
-        rdr.Close();
-      }
-      if (conn != null)
-      {
-        conn.Close();
-      }
-    }
-    public List<Photo> GetAllPhotos()
-    {
-      SqlConnection conn = DB.Connection();
-      conn.Open();
-      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
-      SqlDataReader rdr = cmd.ExecuteReader();
-      List<Photo> allPhotos = new List<Photo>{};
-
-      while(rdr.Read())
-      {
-        int photoId = rdr.GetInt32(0);
-        int userId = rdr.GetInt32(1);
-        string photoUrl = rdr.GetString(3);
-        bool profile = rdr.GetBoolean(4);
-
-        Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
-        allPhotos.Add(newPhoto);
-      }
-      if(rdr != null)
-      {
-        rdr.Close();
-      }
-      if(rdr != null)
-      {
-        conn.Close();
-      }
-      return allMessages;
-    }
 
     public static List<User> GetAll()
     {
@@ -158,14 +104,14 @@ namespace DateABase.Objects
         string userFirstName = rdr.GetString(1);
         string userLastName = rdr.GetString(2);
         string userZipCode = rdr.GetString(3);
+        string userEmail = rdr.GetString(6);
         string userPhoneNumber = rdr.GetString(4);
         string userAboutMe = rdr.GetString(5);
-        string userEmail = rdr.GetString(6);
         string userTagLine = rdr.GetString(7);
         string userUserName = rdr.GetString(8);
         string userPassword = rdr.GetString(9);
 
-        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userPhoneNumber, userAboutMe, userEmail, userTagLine, userId);
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userId);
         allUsers.Add(newUser);
       }
       if(rdr != null)
@@ -183,7 +129,7 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("UPDATE users SET first_name = @FirstName, last_name = @LastName, zip_code= @ZipCode, email= @Email, phone_number= @PhoneNumber, about_me= @AboutMe, tag_line= @TagLine, user_name= @UserName, password= @Password OUTPUT INSERTED.id, INSERTED.user_name, INSERTED.password, INSERTED.first_name, INSERTED.last_name, INSERTED.zip_code, INSERTED.phone_number, INSERTED.email, INSERTED.about_me, INSERTED.tag_line WHERE id = @UserId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE users SET first_name = @FirstName, last_name = @LastName, zip_code= @ZipCode, email= @Email, phone_number= @PhoneNumber, about_me= @AboutMe, tag_line= @TagLine, user_name= @UserName, password = @Password OUTPUT INSERTED.id,  INSERTED.first_name, INSERTED.last_name, INSERTED.zip_code, INSERTED.email, INSERTED.phone_number, INSERTED.about_me, INSERTED.tag_line, INSERTED.user_name, INSERTED.password WHERE id = @UserId;", conn);
 
       cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.Parameters.AddWithValue("@FirstName", firstName);
@@ -201,15 +147,15 @@ namespace DateABase.Objects
       while(rdr.Read())
       {
         this.Id = rdr.GetInt32(0);
-        this.UserName = rdr.GetString(1);
-        this.Password = rdr.GetString(2);
-        this.FirstName = rdr.GetString(3);
-        this.LastName = rdr.GetString(4);
-        this.ZipCode = rdr.GetString(5);
-        this.PhoneNumber = rdr.GetString(6);
-        this.Email = rdr.GetString(7);
-        this.AboutMe = rdr.GetString(8);
-        this.TagLine = rdr.GetString(9);
+        this.FirstName = rdr.GetString(1);
+        this.LastName = rdr.GetString(2);
+        this.ZipCode = rdr.GetString(3);
+        this.Email = rdr.GetString(4);
+        this.PhoneNumber = rdr.GetString(5);
+        this.AboutMe = rdr.GetString(6);
+        this.TagLine = rdr.GetString(7);
+        this.UserName = rdr.GetString(8);
+        this.Password = rdr.GetString(9);
       }
       if (rdr != null)
       {
@@ -248,9 +194,9 @@ namespace DateABase.Objects
         foundFirstName = rdr.GetString(1);
         foundLastName = rdr.GetString(2);
         foundZipCode = rdr.GetString(3);
-        foundPhoneNumber = rdr.GetString(4);
-        foundAboutMe = rdr.GetString(5);
-        foundEmail = rdr.GetString(6);
+        foundEmail = rdr.GetString(4);
+        foundPhoneNumber = rdr.GetString(5);
+        foundAboutMe = rdr.GetString(6);
         foundTagLine = rdr.GetString(7);
         foundUserName = rdr.GetString(8);
         foundPassword = rdr.GetString(9);
@@ -342,9 +288,9 @@ namespace DateABase.Objects
       string foundFirstName = null;
       string foundLastName = null;
       string foundZipCode = null;
+      string foundEmail = null;
       string foundPhoneNumber = null;
       string foundAboutMe = null;
-      string foundEmail = null;
       string foundTagLine = null;
       string foundUserName = null;
       string foundPassword = null;
@@ -355,9 +301,9 @@ namespace DateABase.Objects
         foundFirstName = rdr.GetString(1);
         foundLastName = rdr.GetString(2);
         foundZipCode = rdr.GetString(3);
-        foundPhoneNumber = rdr.GetString(4);
-        foundAboutMe = rdr.GetString(5);
-        foundEmail = rdr.GetString(6);
+        foundEmail = rdr.GetString(4);
+        foundPhoneNumber = rdr.GetString(5);
+        foundAboutMe = rdr.GetString(6);
         foundTagLine = rdr.GetString(7);
         foundUserName = rdr.GetString(8);
         foundPassword = rdr.GetString(9);
@@ -375,6 +321,95 @@ namespace DateABase.Objects
       }
 
       return foundUser;
+    }
+    public void AddPhoto(Photo newPhoto)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
+      cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Photo> GetPhotos()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Photo> allPhotos = new List<Photo>{};
+
+      while(rdr.Read())
+      {
+        int photoId = rdr.GetInt32(0);
+        int userId = rdr.GetInt32(1);
+        string photoUrl = rdr.GetString(2);
+        bool profile = rdr.GetBoolean(3);
+
+        Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
+        allPhotos.Add(newPhoto);
+      }
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allPhotos;
+    }
+    public Photo GetProfilePhoto()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = 1;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      int photoId = 0;
+      int userId = 0;
+      string photoUrl = null;
+      bool profile = false;
+
+      while(rdr.Read())
+      {
+        photoId = rdr.GetInt32(0);
+        userId = rdr.GetInt32(1);
+        photoUrl = rdr.GetString(2);
+        profile = rdr.GetBoolean(3);
+      }
+
+      Photo profilePhoto = new Photo(userId, photoUrl, profile, photoId);
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return profilePhoto;
     }
 
     public List<Message> GetAllReceivedMessages()
