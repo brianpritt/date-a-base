@@ -73,15 +73,15 @@ namespace DateABase
         return View["profile.cshtml", model];
       };
 
-      Patch["/user/update"] = _ => {
-        User currentUser = User.GetCurrentUser();
-        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"]);
-        Dictionary<string, object> model = new Dictionary<string, object>();
-        model.Add("message", "Your profile has been updated");
-        model.Add("user", currentUser);
-        model.Add("state", true);
-        return View["profile.cshtml", model];
-      };
+      // Patch["/user/update"] = _ => {
+      //   User currentUser = User.GetCurrentUser();
+      //   currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"]);
+      //   Dictionary<string, object> model = new Dictionary<string, object>();
+      //   model.Add("message", "Your profile has been updated");
+      //   model.Add("user", currentUser);
+      //   model.Add("state", true);
+      //   return View["profile.cshtml", model];
+      // };
 
       Delete["/user/delete"] = _ => {
         User currentUser = User.GetCurrentUser();

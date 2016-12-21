@@ -693,6 +693,32 @@ namespace DateABase.Objects
       }
       return userNameExists;
     }
+
+    public List<string> ConvertGender(int genderInt)
+    {
+      List<string> tempPronouns = new List<string>{};
+      Dictionary<int, List<string>> intPronouns = new Dictionary<int, List<string>>(){};
+      tempPronouns.Add("she");
+      intPronouns.Add(1, tempPronouns);
+      tempPronouns[0] = ("he");
+      intPronouns.Add(3, tempPronouns);
+      tempPronouns[0] = "they";
+      intPronouns.Add(5, tempPronouns);
+      tempPronouns[0] = ("she");
+      tempPronouns.Add("he");
+      intPronouns.Add(4, tempPronouns);
+      tempPronouns[0] = ("she");
+      intPronouns.Add(6, tempPronouns);
+      tempPronouns[0] = "he";
+      intPronouns.Add(8, tempPronouns);
+      tempPronouns[0] = "she";
+      tempPronouns[1] = "he";
+      tempPronouns.Add("they");
+      intPronouns.Add(9, tempPronouns);
+
+      return intPronouns[genderInt];
+
+    }
     public void Delete()
     {
       SqlConnection conn = DB.Connection();

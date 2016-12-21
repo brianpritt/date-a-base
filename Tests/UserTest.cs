@@ -127,6 +127,16 @@ namespace  DateABase
       User user3 = new User("mammaBear", "honey");
       bool userNameExists = User.CheckUserName(user3.UserName);
       Assert.Equal(true, userNameExists);
+    }
+    [Fact]
+    public void ConverGender_ChangesIntToListOfPronouns_true()
+    {
+      User newUser = new User("mamaBear", "honey", " ", " ", " ", " ", " ", " ", " ", 9, 4);
+      newUser.Save();
+      List<string> actualPronouns = newUser.ConvertGender(newUser.Gender);
+      List<string> expectedPronouns = new List<string>{"she", "he", "they"};
+
+      Assert.Equal(expectedPronouns, actualPronouns);
 
     }
 
