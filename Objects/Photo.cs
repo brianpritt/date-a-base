@@ -43,9 +43,9 @@ namespace DateABase.Objects
 
       SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
 
+      cmd.Parameters.AddWithValue("@UserId", this.UserId);
       cmd.Parameters.AddWithValue("@Url", this.Url);
       cmd.Parameters.AddWithValue("@Profile", this.Profile);
-      cmd.Parameters.AddWithValue("@UserId", this.UserId);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -99,6 +99,7 @@ namespace DateABase.Objects
       SqlCommand cmd = new SqlCommand("UPDATE photos SET profile = 0 WHERE profile = 1 AND user_id = @UserId; UPDATE photos SET profile = 1 WHERE id = @PhotoId; ", conn);
 
       cmd.Parameters.AddWithValue("@PhotoId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@UserId", userId.ToString());
       this.Profile = true;
       cmd.ExecuteNonQuery();
 

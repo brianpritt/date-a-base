@@ -16,10 +16,12 @@ namespace DateABase.Objects
     public string Email {get; set;}
     public string AboutMe {get; set;}
     public string TagLine {get; set;}
+    public int Gender {get; set;}
+    public int SeekGender {get; set;}
 
     private List<string> UserInput = new List<string>{};
 
-    public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = " ", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int id = 0)
+    public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = " ", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int gender = 0, int seekGender = 0, int id = 0)
     {
       this.Id = id;
       this.UserName = username;
@@ -31,6 +33,8 @@ namespace DateABase.Objects
       this.Email = email;
       this.AboutMe = aboutMe;
       this.TagLine = tagLine;
+      this.Gender = gender;
+      this.SeekGender = seekGender;
     }
     public override bool Equals(System.Object otherUser)
     {
@@ -51,8 +55,10 @@ namespace DateABase.Objects
         bool tageLineEquality = this.TagLine == newUser.TagLine;
         bool usernameEquality = this.UserName == newUser.UserName;
         bool passwordEquality = this.Password == newUser.Password;
+        bool genderEquality = this.Gender == newUser.Gender;
+        bool seekGenderEquality = this.SeekGender == newUser.SeekGender;
 
-        return (idEquality && firstNameEquality && lastNameEquality && zipcodeEquality && phoneNumberEquality && emailEquality && aboutMeEquality && tageLineEquality && usernameEquality && passwordEquality);
+        return (idEquality && firstNameEquality && lastNameEquality && zipcodeEquality && phoneNumberEquality && emailEquality && aboutMeEquality && tageLineEquality && usernameEquality && passwordEquality && genderEquality && seekGenderEquality);
       }
     }
     public void Save()
@@ -60,7 +66,7 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO users (first_name, last_name, zip_code, email, phone_number, about_me, tag_line, user_name, password) OUTPUT INSERTED.id VALUES (@FirstName, @LastName, @ZipCode, @Email, @PhoneNumber, @AboutMe, @TagLine, @UserName, @Password);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO users (first_name, last_name, zip_code, email, phone_number, about_me, tag_line, user_name, password, gender_identity, seeking_gender) OUTPUT INSERTED.id VALUES (@FirstName, @LastName, @ZipCode, @Email, @PhoneNumber, @AboutMe, @TagLine, @UserName, @Password, @GenderIdentity, @SeekingGender);", conn);
 
       cmd.Parameters.AddWithValue("@FirstName", this.FirstName);
       cmd.Parameters.AddWithValue("@LastName", this.LastName);
@@ -71,6 +77,8 @@ namespace DateABase.Objects
       cmd.Parameters.AddWithValue("@TagLine", this.TagLine);
       cmd.Parameters.AddWithValue("@UserName", this.UserName);
       cmd.Parameters.AddWithValue("@Password", this.Password);
+      cmd.Parameters.AddWithValue("@GenderIdentity", this.Gender.ToString());
+      cmd.Parameters.AddWithValue("@SeekingGender", this.SeekGender.ToString());
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -110,8 +118,10 @@ namespace DateABase.Objects
         string userTagLine = rdr.GetString(7);
         string userUserName = rdr.GetString(8);
         string userPassword = rdr.GetString(9);
+        int userGender = rdr.GetInt32(10);
+        int userSeekingGender = rdr.GetInt32(11);
 
-        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userId);
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
         allUsers.Add(newUser);
       }
       if(rdr != null)
@@ -124,12 +134,12 @@ namespace DateABase.Objects
       }
       return allUsers;
     }
-    public void Edit(string userName, string password, string firstName, string lastName, string zipCode, string email, string tagLine, string phoneNumber, string aboutMe)
+    public void Edit(string userName, string password, string firstName, string lastName, string zipCode, string email, string tagLine, string phoneNumber, string aboutMe, int gender, int seekGender)
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("UPDATE users SET first_name = @FirstName, last_name = @LastName, zip_code= @ZipCode, email= @Email, phone_number= @PhoneNumber, about_me= @AboutMe, tag_line= @TagLine, user_name= @UserName, password = @Password OUTPUT INSERTED.id,  INSERTED.first_name, INSERTED.last_name, INSERTED.zip_code, INSERTED.email, INSERTED.phone_number, INSERTED.about_me, INSERTED.tag_line, INSERTED.user_name, INSERTED.password WHERE id = @UserId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE users SET first_name = @FirstName, last_name = @LastName, zip_code= @ZipCode, email= @Email, phone_number= @PhoneNumber, about_me= @AboutMe, tag_line= @TagLine, user_name= @UserName, password = @Password, gender_identity = @Gender, seeking_gender = @SeekGender OUTPUT INSERTED.id, INSERTED.first_name, INSERTED.last_name, INSERTED.zip_code, INSERTED.email, INSERTED.phone_number, INSERTED.about_me, INSERTED.tag_line, INSERTED.user_name, INSERTED.password, INSERTED.gender_identity, INSERTED.seeking_gender WHERE id = @UserId;", conn);
 
       cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.Parameters.AddWithValue("@FirstName", firstName);
@@ -141,6 +151,8 @@ namespace DateABase.Objects
       cmd.Parameters.AddWithValue("@TagLine", tagLine);
       cmd.Parameters.AddWithValue("@UserName", userName);
       cmd.Parameters.AddWithValue("@Password", password);
+      cmd.Parameters.AddWithValue("@Gender", gender);
+      cmd.Parameters.AddWithValue("@SeekGender", seekGender);
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
@@ -156,6 +168,8 @@ namespace DateABase.Objects
         this.TagLine = rdr.GetString(7);
         this.UserName = rdr.GetString(8);
         this.Password = rdr.GetString(9);
+        this.Gender = rdr.GetInt32(10);
+        this.SeekGender = rdr.GetInt32(11);
       }
       if (rdr != null)
       {
@@ -187,6 +201,8 @@ namespace DateABase.Objects
       string foundTagLine = null;
       string foundUserName = null;
       string foundPassword = null;
+      int foundGender = 0;
+      int foundSeekGender = 0;
 
       while(rdr.Read())
       {
@@ -200,9 +216,11 @@ namespace DateABase.Objects
         foundTagLine = rdr.GetString(7);
         foundUserName = rdr.GetString(8);
         foundPassword = rdr.GetString(9);
+        foundGender = rdr.GetInt32(10);
+        foundSeekGender = rdr.GetInt32(11);
 
       }
-      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundUserId);
+      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundGender, foundSeekGender, foundUserId);
 
       if (rdr != null)
       {
@@ -294,6 +312,8 @@ namespace DateABase.Objects
       string foundTagLine = null;
       string foundUserName = null;
       string foundPassword = null;
+      int foundGender = 0;
+      int foundSeekGender = 0;
 
       while(rdr.Read())
       {
@@ -307,9 +327,11 @@ namespace DateABase.Objects
         foundTagLine = rdr.GetString(7);
         foundUserName = rdr.GetString(8);
         foundPassword = rdr.GetString(9);
+        foundGender = rdr.GetInt32(10);
+        foundSeekGender = rdr.GetInt32(11);
 
       }
-      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundUserId);
+      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundGender, foundSeekGender, foundUserId);
 
       if (rdr != null)
       {
@@ -329,7 +351,7 @@ namespace DateABase.Objects
 
       SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
 
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
       cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
 
@@ -337,7 +359,7 @@ namespace DateABase.Objects
 
       while(rdr.Read())
       {
-        this.Id = rdr.GetInt32(0);
+        newPhoto.Id = rdr.GetInt32(0);
       }
       if (rdr != null)
       {
@@ -379,18 +401,20 @@ namespace DateABase.Objects
       }
       return allPhotos;
     }
+
     public Photo GetProfilePhoto()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = 1;", conn);
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = @Profile;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@Profile", 1.ToString());
+
       SqlDataReader rdr = cmd.ExecuteReader();
       int photoId = 0;
       int userId = 0;
       string photoUrl = null;
       bool profile = false;
-
       while(rdr.Read())
       {
         photoId = rdr.GetInt32(0);
@@ -398,8 +422,8 @@ namespace DateABase.Objects
         photoUrl = rdr.GetString(2);
         profile = rdr.GetBoolean(3);
       }
-
       Photo profilePhoto = new Photo(userId, photoUrl, profile, photoId);
+
 
       if(rdr != null)
       {

@@ -46,8 +46,8 @@ namespace  DateABase
     {
       User user1 = new User("mammaBear", "honey");
       user1.Save();
-      user1.Edit("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
-      User expectedUser = new User("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ");
+      user1.Edit("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ", 0, 0);
+      User expectedUser = new User("DogMan", "bark", " ", " ", " ", " ", " ", " ", " ", 0 , 0);
 
       Assert.Equal(expectedUser.UserName, user1.UserName);
     }
