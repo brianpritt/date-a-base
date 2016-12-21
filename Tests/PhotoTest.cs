@@ -45,18 +45,20 @@ namespace  DateABase
       List<Photo> allPhotos = newUser.GetPhotos();
       Assert.Equal(2, allPhotos.Count);
     }
-    // [Fact]
-    // public void MakeProfile_ChangesProfilePic_true()
-    // {
-    //   User user1 = new User("mammaBear", "honey");
-    //   user1.Save();
-    //   Photo newPhoto = new Photo(newUser.Id, "another/photo.jpeg",  true);
-    //   newPhoto.Save();
-    //   Photo newPhoto2 = new Photo(newUser.Id, "my/photo.jpeg");
-    //   newPhoto.MakeProfile();
-    //   List<Photo> allSentPhotos = user1.GetAllSentPhotos();
-    //   Assert.Equal(1, allSentPhotos.Count);
-    // }
+    [Fact]
+    public void MakeProfile_ChangesProfilePic_true()
+    {
+      User user1 = new User("mammaBear", "honey");
+      user1.Save();
+      Photo newPhoto = new Photo(user1.Id, "another/photo.jpeg",  true);
+      newPhoto.Save();
+      Photo newPhoto2 = new Photo(user1.Id, "my/photo.jpeg");
+      newPhoto2.Save();
+      newPhoto2.MakeProfile(user1.Id);
+      Console.WriteLine(newPhoto2.Url);
+      Photo profilePhoto = user1.GetProfilePhoto();
+      Assert.Equal(newPhoto2, profilePhoto);
+    }
   //   [Fact]
   //   public void GetAllUnreadPhotos_GetsUnreadPhotos_true()
   //   {

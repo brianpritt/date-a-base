@@ -379,18 +379,20 @@ namespace DateABase.Objects
       }
       return allPhotos;
     }
+
     public Photo GetProfilePhoto()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = 1;", conn);
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = @Profile;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@Profile", 1.ToString());
+
       SqlDataReader rdr = cmd.ExecuteReader();
       int photoId = 0;
       int userId = 0;
       string photoUrl = null;
       bool profile = false;
-
       while(rdr.Read())
       {
         photoId = rdr.GetInt32(0);
@@ -398,8 +400,8 @@ namespace DateABase.Objects
         photoUrl = rdr.GetString(2);
         profile = rdr.GetBoolean(3);
       }
-
       Photo profilePhoto = new Photo(userId, photoUrl, profile, photoId);
+
 
       if(rdr != null)
       {
