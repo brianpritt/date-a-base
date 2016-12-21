@@ -97,7 +97,6 @@ namespace DateABase.Objects
     }
 
 
-
     public static List<User> GetAll()
     {
       SqlConnection conn = DB.Connection();
@@ -344,6 +343,7 @@ namespace DateABase.Objects
 
       return foundUser;
     }
+
     public void AddPhoto(Photo newPhoto)
     {
       SqlConnection conn = DB.Connection();
@@ -487,6 +487,7 @@ namespace DateABase.Objects
       }
       return profilePhoto;
     }
+
 
     public List<Message> GetAllReceivedMessages()
     {
@@ -746,6 +747,7 @@ namespace DateABase.Objects
       return userNameExists;
     }
 
+
     public List<string> ConvertGender(int genderInt)
     {
       List<string> tempPronouns = new List<string>{};
@@ -769,6 +771,46 @@ namespace DateABase.Objects
       intPronouns.Add(9, tempPronouns);
 
       return intPronouns[genderInt];
+
+
+    public static List<User> FilterByGender(int genderId)
+    {
+      List<User> filteredList = new List<User>{};
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender;", conn);
+      cmd.Parameters.AddWithValue("@Gender", genderId);
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+
+      while(rdr.Read())
+      {
+        int userId = rdr.GetInt32(0);
+        string userFirstName = rdr.GetString(1);
+        string userLastName = rdr.GetString(2);
+        string userZipCode = rdr.GetString(3);
+        string userEmail = rdr.GetString(6);
+        string userPhoneNumber = rdr.GetString(4);
+        string userAboutMe = rdr.GetString(5);
+        string userTagLine = rdr.GetString(7);
+        string userUserName = rdr.GetString(8);
+        string userPassword = rdr.GetString(9);
+        int userGender = rdr.GetInt32(10);
+        int userSeekingGender = rdr.GetInt32(11);
+
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
+        filteredList.Add(newUser);
+      }
+      if(rdr!=null)
+      {
+        rdr.Close();
+      }
+      if(conn!=null)
+      {
+        conn.Close();
+      }
+      return filteredList;
 
     }
     public void Delete()

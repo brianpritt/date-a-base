@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+@{
+  string senderName = " ";
+}
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>@Model["user"].UserName 's Messages:</h1>
+  </div>
+    @foreach (var message in Model["messageList"])
+    {
+      foreach (var sender in Model["userList"])
+      {
+        if (message.SenderId == sender.Id)
+        {
+          senderName = sender.UserName;
+        }
+      }
+      <h3><a href="/user/messages/@message.Id">From: @senderName</a></h3>
+    }
+    <button class="btn btn-danger"type="button" name="button"><a href="/user/messages/read">View all read</a></button>
+    <button class="btn btn-info"type="button" name="button">View all unread</button>
+    <button class="btn btn-success"type="button" name="button">View all sent</button>
+    <button class="btn btn-warning" type="button" name="button">View all</button>
+  <h5><a href="/profile/@Model["user"].Id">Home</a></h5>
+</div>

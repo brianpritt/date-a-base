@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
+<div class="container">
+  <form action="/user/message/send" method="post">
+    <div class="jumbotron">
+      <h1>Send a message to @Model["receiver"].UserName</h1>
+    </div>
+      <textarea rows = "5" cols ="50" class="form-control" type="textbox" name="message-text"></textarea>
+      <input type="text" name="sender" value="@Model["sender"].Id" hidden>
+      <input type="text" name="receiver" value="@Model["receiver"].Id" hidden>
+    <button type="submit" class="btn btn-success">Send</button>
+  </form>
+  <p>
+    <a href="/profile/@Model["sender"].Id">Home</a>
+  </p>
+</div>

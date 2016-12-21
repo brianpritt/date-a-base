@@ -7,16 +7,16 @@
   <h3>@Model["message"]</h3>
 }
 <div class="container">
-  <h2>Profiles</h2><br>
+  <h2>Profiles</h2><hr>
     @foreach(var profile in Model["users"])
     {
-      <h2><a href="/profile/@profile.Id">@profile.FirstName</a></h2>
+      <h2><a href="/profile/@profile.Id">@profile.FirstName</a> @profile.TagLine</h2>
       <h4>@profile.TagLine</h4>
     }
 
   <form action="tag/search" method="post">
     <label for="tag"></label>
-    <input type="text" name="tag">
-    <button type="submit">Search</button>
+    <input class="form-control"type="text" name="tag">
+    <button class="btn btn-info"type="submit">Search</button>
   </form>
 </div>

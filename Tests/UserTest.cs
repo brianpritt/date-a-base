@@ -139,6 +139,14 @@ namespace  DateABase
       Assert.Equal(expectedPronouns, actualPronouns);
 
     }
+    public void FilterByGender_FiltersUserGender()
+    {
+      User filterUser = new User("CatMan", "meow", " ", " ", " ", " ", " ", " ", " ", 0, 0);
+      filterUser.Save();
+
+      List<User> resultUsers = User.FilterByGender(0);
+      Assert.Equal(1, resultUsers.Count);
+    }
 
     public void Dispose()
     {
