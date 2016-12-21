@@ -329,7 +329,7 @@ namespace DateABase.Objects
 
       SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
 
-      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
       cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
       cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
 
@@ -337,7 +337,7 @@ namespace DateABase.Objects
 
       while(rdr.Read())
       {
-        this.Id = rdr.GetInt32(0);
+        newPhoto.Id = rdr.GetInt32(0);
       }
       if (rdr != null)
       {
