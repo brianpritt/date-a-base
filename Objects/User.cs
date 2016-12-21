@@ -88,6 +88,32 @@ namespace DateABase.Objects
       }
     }
 
+    public void AddPhoto(Photo newPhoto)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
+      cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
 
     public static List<User> GetAll()
     {
