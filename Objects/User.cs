@@ -97,7 +97,6 @@ namespace DateABase.Objects
     }
 
 
-
     public static List<User> GetAll()
     {
       SqlConnection conn = DB.Connection();

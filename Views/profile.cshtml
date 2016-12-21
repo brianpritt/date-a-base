@@ -18,7 +18,12 @@
   {
     @if(Model["state"] == true)
     {
-      <button type="button" name="button" class="btn btn-info"><a href="/user/update">Edit Profile</a></button>
+      <button type="button" name="update" class="btn btn-info"><a href="/user/update">Edit Profile</a></button>
+      <button type="button" name="messages" class="btn btn-info"><a href="/user/messages">View Messages</a></button>
+    }
+    @if(Model["state"] == false)
+    {
+      <button type="button" name="update" class="btn btn-info"><a href="/user/@Model["user"].Id/message/send">Message @Model["user"].UserName</a></button>
     }
   }
   <button type="button" name="button" class="btn btn-info"><a href="/users">View All Profiles</a></button>
