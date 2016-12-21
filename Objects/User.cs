@@ -401,6 +401,58 @@ namespace DateABase.Objects
       }
       return allPhotos;
     }
+    public void AddTag(Tag selectedTag)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO tags_users (user_id, tag_id) VALUES (@UserId, @TagId);", conn);
+
+      cmd.Parameters.AddWithValue("@TagId", selectedTag.Id);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        selectedTag.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    public List<Tag> GetTags()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT tags.* FROM users JOIN tags_users ON (users.id = tags_users.user_id) JOIN tags ON (tags_users.tag_id = tags.id) WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Tag> allTags = new List<Tag>{};
+
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string tagName = rdr.GetString(1);
+        Tag newTag = new Tag(tagName, id);
+        allTags.Add(newTag);
+      }
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allTags;
+    }
 
     public Photo GetProfilePhoto()
     {
