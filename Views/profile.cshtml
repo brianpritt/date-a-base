@@ -2,12 +2,11 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
-
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
 <div class="container">
-  @if(Model.ContainsKey("message"))
-  {
-    <h3>@Model["message"]</h3>
-  }
   <div class="jumbotron">
     <h1>@Model["user"].UserName</h1>
     <h3>@Model["user"].FirstName</h3>
@@ -16,9 +15,12 @@
     <h3>@Model["user"].Email</h3>
     <p>@Model["user"].AboutMe</p>
 
-  @if (Model["state"])
+  @if(Model.ContainsKey("state"))
   {
-    <button type="button" name="button" class="btn btn-info"><a href="/user/update">Edit Profile</a></button>
+    @if(Model["state"] == true)
+    {
+      <button type="button" name="button" class="btn btn-info"><a href="/user/update">Edit Profile</a></button>
+    }
   }
   <button type="button" name="button" class="btn btn-info"><a href="/users">View All Profiles</a></button>
   </div>

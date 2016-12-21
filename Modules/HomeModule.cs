@@ -2,9 +2,7 @@
 using Nancy;
 using System.Collections.Generic;
 using System;
-
-
-using System.Windows.Forms;
+// using System.Windows.Forms;
 using DateABase.Objects;
 
 namespace DateABase
@@ -31,18 +29,24 @@ namespace DateABase
       Post["/sign-in"] = _ =>{
         string userName = Request.Form["user-name"];
         string userPassword = Request.Form["user-password"];
-        bool loginStatus = User.CheckLogin(Request.Form(userName), Request.Form(userPassword));
+        bool loginStatus = User.CheckLogin(userName, userPassword);
+
         Dictionary<string, object> model = new Dictionary<string, object>();
+        Console.WriteLine("before if " + userName);
+
+        User currentUser = User.FindByUserName(userName);
         if (loginStatus == true)
         {
-          User currentUser = User.FindByUserName(userName);
           User.SetCurrentUser(currentUser);
           model.Add("message", "Welcome!");
+          model.Add("state", true);
           model.Add("user", currentUser);
+          Console.WriteLine("inside true if " + currentUser.UserName);
         }
         if (loginStatus == false)
         {
           model.Add("message", "Invalid User Name or Password");
+          Console.WriteLine("inside false if " + currentUser.UserName);
           return View["index.cshtml", model];
         }
         return View["profile.cshtml", model];
@@ -55,10 +59,20 @@ namespace DateABase
         model.Add("user", currentUser);
         return View["edit_profile.cshtml", model];
       };
+      Get["/profile/{id}"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.id);
+        model.Add("user", selectedUser);
+        return View["profile.cshtml", model];
+      };
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
-        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"], Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],Request.Form["about"]);
-        Dictionary<string, object> model = new Dictionary<string, object>(){{"message", "Your profile has been updated"},{"user", currentUser},{"state" , true}};
+        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"], Request.Form["phone-number"], Request.Form["email"], Request.Form["about"],Request.Form["tag-line"]);
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("message", "Your profile has been updated");
+        model.Add("user", currentUser);
+        model.Add("state", true);
         return View["profile.cshtml", model];
       };
       Delete["/user/delete"] = _ => {
@@ -70,11 +84,10 @@ namespace DateABase
       };
       Get["/user/delete/cancel"]=_=>{
           Dictionary<string, object> model = new Dictionary<string, object>();
-          User currentUser = User.GetCurrentUser(); 
+          User currentUser = User.GetCurrentUser();
           model.Add("user", currentUser);
           return View["profile.cshtml", model];
       };
-
       Get["/users"] = _ => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         List<User> allUsers = User.GetAll();
@@ -85,4 +98,3 @@ namespace DateABase
     }
   }
 }
-

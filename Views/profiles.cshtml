@@ -2,16 +2,15 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
-
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
 <div class="container">
-  @if(Model.ContainsKey("message"))
-  {
-    <h3>@Model["message"]</h3>
-  }
   <h2>Profiles</h2><br>
     @foreach(var profile in Model["users"])
     {
-      <h2><a href="@profile.Id">@profile.FirstName</a></h2>
+      <h2><a href="/profile/@profile.Id">@profile.FirstName</a></h2>
       <h4>@profile.TagLine</h4>
     }
 
