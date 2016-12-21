@@ -114,6 +114,35 @@ namespace DateABase.Objects
         conn.Close();
       }
     }
+    public List<Photo> GetAllPhotos()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Photo> allPhotos = new List<Photo>{};
+
+      while(rdr.Read())
+      {
+        int photoId = rdr.GetInt32(0);
+        int userId = rdr.GetInt32(1);
+        string photoUrl = rdr.GetString(3);
+        bool profile = rdr.GetBoolean(4);
+
+        Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
+        allPhotos.Add(newPhoto);
+      }
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allMessages;
+    }
 
     public static List<User> GetAll()
     {
