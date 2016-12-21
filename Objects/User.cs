@@ -343,97 +343,151 @@ namespace DateABase.Objects
 
       return foundUser;
     }
-    // public void AddPhoto(Photo newPhoto)
-    // {
-    //   SqlConnection conn = DB.Connection();
-    //   conn.Open();
-    //
-    //   SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
-    //
-    //   cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
-    //   cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
-    //   cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
-    //
-    //   SqlDataReader rdr = cmd.ExecuteReader();
-    //
-    //   while(rdr.Read())
-    //   {
-    //     newPhoto.Id = rdr.GetInt32(0);
-    //   }
-    //   if (rdr != null)
-    //   {
-    //     rdr.Close();
-    //   }
-    //   if (conn != null)
-    //   {
-    //     conn.Close();
-    //   }
-    // }
 
-    // public List<Photo> GetPhotos()
-    // {
-    //   SqlConnection conn = DB.Connection();
-    //   conn.Open();
-    //   SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
-    //   cmd.Parameters.AddWithValue("@UserId", this.Id);
-    //   SqlDataReader rdr = cmd.ExecuteReader();
-    //   List<Photo> allPhotos = new List<Photo>{};
-    //
-    //   while(rdr.Read())
-    //   {
-    //     int photoId = rdr.GetInt32(0);
-    //     int userId = rdr.GetInt32(1);
-    //     string photoUrl = rdr.GetString(2);
-    //     bool profile = rdr.GetBoolean(3);
-    //
-    //     Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
-    //     allPhotos.Add(newPhoto);
-    //   }
-    //
-    //   if(rdr != null)
-    //   {
-    //     rdr.Close();
-    //   }
-    //   if(rdr != null)
-    //   {
-    //     conn.Close();
-    //   }
-    //   return allPhotos;
-    // }
-    //
-    // public Photo GetProfilePhoto()
-    // {
-    //   SqlConnection conn = DB.Connection();
-    //   conn.Open();
-    //   SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = @Profile;", conn);
-    //   cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
-    //   cmd.Parameters.AddWithValue("@Profile", 1.ToString());
-    //
-    //   SqlDataReader rdr = cmd.ExecuteReader();
-    //   int photoId = 0;
-    //   int userId = 0;
-    //   string photoUrl = null;
-    //   bool profile = false;
-    //   while(rdr.Read())
-    //   {
-    //     photoId = rdr.GetInt32(0);
-    //     userId = rdr.GetInt32(1);
-    //     photoUrl = rdr.GetString(2);
-    //     profile = rdr.GetBoolean(3);
-    //   }
-    //   Photo profilePhoto = new Photo(userId, photoUrl, profile, photoId);
-    //
-    //
-    //   if(rdr != null)
-    //   {
-    //     rdr.Close();
-    //   }
-    //   if(rdr != null)
-    //   {
-    //     conn.Close();
-    //   }
-    //   return profilePhoto;
-    // }
+    public void AddPhoto(Photo newPhoto)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO photos (user_id, url, profile) OUTPUT INSERTED.id VALUES (@UserId, @Url, @Profile);", conn);
+
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@Url", newPhoto.Url);
+      cmd.Parameters.AddWithValue("@Profile", newPhoto.Profile);
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        newPhoto.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+
+    public List<Photo> GetPhotos()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Photo> allPhotos = new List<Photo>{};
+
+      while(rdr.Read())
+      {
+        int photoId = rdr.GetInt32(0);
+        int userId = rdr.GetInt32(1);
+        string photoUrl = rdr.GetString(2);
+        bool profile = rdr.GetBoolean(3);
+
+        Photo newPhoto = new Photo(userId, photoUrl, profile, photoId);
+        allPhotos.Add(newPhoto);
+      }
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allPhotos;
+    }
+    public void AddTag(Tag selectedTag)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO tags_users (user_id, tag_id) VALUES (@UserId, @TagId);", conn);
+
+      cmd.Parameters.AddWithValue("@TagId", selectedTag.Id);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        selectedTag.Id = rdr.GetInt32(0);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+    }
+    public List<Tag> GetTags()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT tags.* FROM users JOIN tags_users ON (users.id = tags_users.user_id) JOIN tags ON (tags_users.tag_id = tags.id) WHERE user_id = @UserId;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<Tag> allTags = new List<Tag>{};
+
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string tagName = rdr.GetString(1);
+        Tag newTag = new Tag(tagName, id);
+        allTags.Add(newTag);
+      }
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return allTags;
+    }
+
+    public Photo GetProfilePhoto()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT * FROM photos WHERE user_id = @UserId AND profile = @Profile;", conn);
+      cmd.Parameters.AddWithValue("@UserId", this.Id.ToString());
+      cmd.Parameters.AddWithValue("@Profile", 1.ToString());
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+      int photoId = 0;
+      int userId = 0;
+      string photoUrl = null;
+      bool profile = false;
+      while(rdr.Read())
+      {
+        photoId = rdr.GetInt32(0);
+        userId = rdr.GetInt32(1);
+        photoUrl = rdr.GetString(2);
+        profile = rdr.GetBoolean(3);
+      }
+      Photo profilePhoto = new Photo(userId, photoUrl, profile, photoId);
+
+
+      if(rdr != null)
+      {
+        rdr.Close();
+      }
+      if(rdr != null)
+      {
+        conn.Close();
+      }
+      return profilePhoto;
+    }
+
 
     public List<Message> GetAllReceivedMessages()
     {
@@ -693,6 +747,32 @@ namespace DateABase.Objects
       return userNameExists;
     }
 
+
+    public List<string> ConvertGender(int genderInt)
+    {
+      List<string> tempPronouns = new List<string>{};
+      Dictionary<int, List<string>> intPronouns = new Dictionary<int, List<string>>(){};
+      tempPronouns.Add("she");
+      intPronouns.Add(1, tempPronouns);
+      tempPronouns[0] = ("he");
+      intPronouns.Add(3, tempPronouns);
+      tempPronouns[0] = "they";
+      intPronouns.Add(5, tempPronouns);
+      tempPronouns[0] = ("she");
+      tempPronouns.Add("he");
+      intPronouns.Add(4, tempPronouns);
+      tempPronouns[0] = ("she");
+      intPronouns.Add(6, tempPronouns);
+      tempPronouns[0] = "he";
+      intPronouns.Add(8, tempPronouns);
+      tempPronouns[0] = "she";
+      tempPronouns[1] = "he";
+      tempPronouns.Add("they");
+      intPronouns.Add(9, tempPronouns);
+
+      return intPronouns[genderInt];
+
+
     public static List<User> FilterByGender(int genderId)
     {
       List<User> filteredList = new List<User>{};
@@ -731,6 +811,7 @@ namespace DateABase.Objects
         conn.Close();
       }
       return filteredList;
+
     }
     public void Delete()
     {
