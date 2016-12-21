@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+@{
+  string senderName = " ";
+}
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>From: @Model["sender"].UserName</h1>
+    <hr>
+    <h4>@Model["current"].MessageBody</h4>
+  </div>
+  <p>
+    <a href="/profile/@Model["user"].Id">Home</a>
+  </p>
+</div>
