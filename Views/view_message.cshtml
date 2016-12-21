@@ -11,11 +11,17 @@
 }
 
 <div class="container">
-  <div class="jumbotron">
+  <div class="well">
     <h1>From: @Model["sender"].UserName</h1>
-    <hr>
-    <h4>@Model["current"].MessageBody</h4>
   </div>
+    <hr>
+    <div class="well">
+    <h4>@Model["user"].MessageBody</h4>
+  </div>
+
+    <button class="btn btn-info"type="button" name="reply"><a href="/user/messages/@Model["sender"].Id/reply">Reply</a></button>
+    <button class="btn btn-danger" type="button" name="button">Delete</button>
+  </form>
   <p>
     <a href="/profile/@Model["user"].Id">Home</a>
   </p>

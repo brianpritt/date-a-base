@@ -25,7 +25,9 @@
       }
       <h3><a href="/user/messages/@message.Id">From: @senderName</a></h3>
     }
-  <p>
-    <a href="/profile/@Model["user"].Id">Home</a>
-  </p>
+    <button class="btn btn-danger"type="button" name="button"><a href="/user/messages/read">View all read</a></button>
+    <button class="btn btn-info"type="button" name="button">View all unread</button>
+    <button class="btn btn-success"type="button" name="button">View all sent</button>
+    <button class="btn btn-warning" type="button" name="button">View all</button>
+  <h5><a href="/profile/@Model["user"].Id">Home</a></h5>
 </div>

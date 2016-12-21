@@ -100,13 +100,13 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("UPDATE messages SET viewed = @Viewed, OUTPUT INSERTED.viewed WHERE id = @MessageId;", conn);
+      SqlCommand cmd = new SqlCommand("UPDATE messages SET viewed = @Viewed OUTPUT INSERTED.viewed WHERE id = @MessageId;", conn);
 
       cmd.Parameters.AddWithValue("@MessageId", this.Id.ToString());
       cmd.Parameters.AddWithValue("@Viewed", 1);
 
       SqlDataReader rdr = cmd.ExecuteReader();
-
+      this.Viewed = true;
       while(rdr.Read())
       {
         this.Viewed = rdr.GetBoolean(0);
