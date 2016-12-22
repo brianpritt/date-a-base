@@ -365,11 +365,16 @@ namespace DateABase
       Get["/matches"] = _ => {
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
+        currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
         Dictionary<string, object> model = new Dictionary<string, object>();
+        string message = "Showing " + currentUser.SeekGenders + " seeking " + currentUser.Genders;
+        model.Add("message", message);
         model.Add("user", currentUser);
         model.Add("matches", matches);
         return View["matches.cshtml", model];
       };
+
       Get["/match/{id}"] = parameters => {
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
@@ -420,6 +425,7 @@ namespace DateABase
 
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
+        User.DeleteMatches();
         User.DeleteState();
         return View["index.cshtml",model];
       };

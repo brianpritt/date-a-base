@@ -1055,7 +1055,7 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT users.* FROM matches JOIN users ON (users.id = matches.user2_id) WHERE matches.id = @MatchUserId;", conn);
+      SqlCommand cmd = new SqlCommand("SELECT users.* FROM matches JOIN users ON (users.id = matches.user2_id) WHERE matches.user2_id = @MatchUserId;", conn);
       cmd.Parameters.AddWithValue("@MatchUserId", id.ToString());
       SqlDataReader rdr = cmd.ExecuteReader();
       int foundUserId = 0;
