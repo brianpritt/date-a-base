@@ -25,10 +25,9 @@
     <h4>username: @Model["user"].UserName</h4>
     <p>about me: @Model["user"].AboutMe</p>
     <h6>zip-code: @Model["user"].ZipCode</h6>
-    <h6>email; @Model["user"].Email</h6>
-    <br>
-    <h4><a href='/user/@Model["user"].Id/photos'>Photos</a></h4>
-    <hr>
+    <h6>email: @Model["user"].Email</h6>
+    <a href="/user/@Model["user"].Id/photo/@Model["profilePic"].Id"><img src="@Model["profilePic"].Url" alt="profile picture" id="profilePic"/></a>
+
 
 
   @if(Model.ContainsKey("state"))
