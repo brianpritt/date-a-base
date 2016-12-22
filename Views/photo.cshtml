@@ -1,3 +1,10 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
+<h2>@Model["user"].FirstName @Model["user"].LastName</h2>
+<img src="@Model["photo"].Url" alt="Picture">
+<form action="/user/@Model["user"].Id/photo/@Model["photo"].Id" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+
+  <button type="sumbit" class="btn btn-danger">Delete photo</button>
+</form>
