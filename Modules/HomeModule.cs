@@ -221,7 +221,9 @@ namespace DateABase
       Get["/user/messages/{id}/reply"] =parameters =>{
         User sendingUser = User.GetCurrentUser();
         User receivingUser = User.Find(parameters.id);
+        List<Message> allCorrespondence = sendingUser.GetCorrespondenceFromDater(receivingUser);
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("history", allCorrespondence);
         messageDictionary.Add("sender", sendingUser);
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];

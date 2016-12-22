@@ -43,6 +43,9 @@
         @foreach (var message in Model["messageList"])
         {
           <h4><a href="/user/messages/@message.Id">From: @message.SenderId</a></h4>
+          <div class="well">
+          <h5>@message.MessageBody</h5>
+          </div>
         }
       }
       <h4><a href="/user/update">Edit Profile</a></h4>
