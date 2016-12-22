@@ -66,15 +66,15 @@ namespace DateABase.Objects
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO users (first_name, last_name, zip_code, email, phone_number, about_me, tag_line, user_name, password, gender_identity, seeking_gender) OUTPUT INSERTED.id VALUES (@FirstName, @LastName, @ZipCode, @Email, @PhoneNumber, @AboutMe, @TagLine, @UserName, @Password, @GenderIdentity, @SeekingGender);", conn);
+      SqlCommand cmd = new SqlCommand("INSERT INTO users (first_name, last_name, zip_code, email, phone_number, tag_line, about_me, user_name, password, gender_identity, seeking_gender) OUTPUT INSERTED.id VALUES (@FirstName, @LastName, @ZipCode, @Email, @PhoneNumber, @AboutMe, @TagLine, @UserName, @Password, @GenderIdentity, @SeekingGender);", conn);
 
       cmd.Parameters.AddWithValue("@FirstName", this.FirstName);
       cmd.Parameters.AddWithValue("@LastName", this.LastName);
       cmd.Parameters.AddWithValue("@ZipCode", this.ZipCode);
       cmd.Parameters.AddWithValue("@Email", this.Email);
       cmd.Parameters.AddWithValue("@PhoneNumber", this.PhoneNumber);
-      cmd.Parameters.AddWithValue("@AboutMe", this.AboutMe);
       cmd.Parameters.AddWithValue("@TagLine", this.TagLine);
+      cmd.Parameters.AddWithValue("@AboutMe", this.AboutMe);
       cmd.Parameters.AddWithValue("@UserName", this.UserName);
       cmd.Parameters.AddWithValue("@Password", this.Password);
       cmd.Parameters.AddWithValue("@GenderIdentity", this.Gender.ToString());
@@ -120,7 +120,7 @@ namespace DateABase.Objects
         int userGender = rdr.GetInt32(10);
         int userSeekingGender = rdr.GetInt32(11);
 
-        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userTagLine, userPhoneNumber, userAboutMe, userGender, userSeekingGender, userId);
         allUsers.Add(newUser);
       }
       if(rdr != null)
