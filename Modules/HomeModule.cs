@@ -221,7 +221,9 @@ namespace DateABase
       Get["/user/messages/{id}/reply"] =parameters =>{
         User sendingUser = User.GetCurrentUser();
         User receivingUser = User.Find(parameters.id);
+        List<Message> allCorrespondence = sendingUser.GetCorrespondenceFromDater(receivingUser);
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("history", allCorrespondence);
         messageDictionary.Add("sender", sendingUser);
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];
@@ -388,7 +390,6 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
         User matchUser = currentUser.FindMatch(parameters.id);
-        Console.WriteLine(index);
         int index = matches.IndexOf(matchUser);
         Console.WriteLine(index);
         User prevMatch = null;
