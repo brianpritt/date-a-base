@@ -7,14 +7,14 @@
   <h3>@Model["message"]</h3>
 }
 <div class="container">
-  <div class="jumbotron">
-    <h1>@Model["user"].FirstName @Model["user"].LastName</h1>
+  <div class="well">
+    <h2>@Model["user"].FirstName @Model["user"].LastName</h2>
     <h3>@Model["user"].TagLine</h3>
     <h4>username: @Model["user"].UserName</h4>
+    <p>about me: @Model["user"].AboutMe</p>
     <h6>zip-code: @Model["user"].ZipCode</h6>
     <h6>email; @Model["user"].Email</h6>
-    <p>about me: @Model["user"].AboutMe</p>
-    @* <img src="@Model["profilePic"]" alt="profile picture" id="profilePic"/> *@
+    <img src="@Model["profilePic"]" alt="profile picture" id="profilePic"/>
 
 
   @if(Model.ContainsKey("state"))

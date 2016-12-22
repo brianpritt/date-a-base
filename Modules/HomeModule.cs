@@ -30,6 +30,8 @@ namespace DateABase
           newUser.Save();
           User.SetCurrentUser(newUser);
           User currentUser = User.GetCurrentUser();
+          model.Add("profilePic", null);
+          model.Add("messageList", null);
           model.Add("message", "Create new profile");
           model.Add("user", currentUser);
         }
@@ -46,6 +48,7 @@ namespace DateABase
         {
           User.SetCurrentUser(currentUser);
           List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+          model.Add("profilePic", null);
           model.Add("messageList", allUnreadMessages);
           model.Add("message", "Welcome!");
           model.Add("state", true);
