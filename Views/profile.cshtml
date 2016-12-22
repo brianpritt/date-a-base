@@ -10,7 +10,7 @@
 <div class="container">
   <div class="row">
   <div class="col-md-2">
-    <img src="@Model["user"].GetProfilePhoto().Url" alt="profile picture" id="profilePic"/>
+    <img src="@Model["user"].GetProfilePhoto().Url" alt="profile picture" id="profilePic" class="small-picture"/>
     <h4><a href="/user/@Model["user"].Id">My Profile</a></h4>
     <h4><a href="/users">View All Profiles</a></h4>
     <h4><a href="/user/messages">View Messages</a></h4>
@@ -18,8 +18,8 @@
     <h4 id="log-out-h4"><a href="/logout">Log-Out</a></h4>
   </div>
   <div class="col-md-10 well">
-    <h2>@Model["user"].FirstName @Model["selectedUser"].LastName</h2>
-    <img src="@Model["selectedUser"].GetProfilePhoto().Url" alt="profile picture" id="profilePic"/>
+    <h2>@Model["selectedUser"].FirstName @Model["selectedUser"].LastName</h2>
+    <img src="@Model["selectedUser"].GetProfilePhoto().Url" alt="profile picture" id="profilePic" class="small-picture"/>
     <h3>@Model["selectedUser"].TagLine</h3>
     <h4>@Model["selectedUser"].Genders seeking @Model["selectedUser"].SeekGenders</h4>
     <h4>username: @Model["selectedUser"].UserName</h4>
