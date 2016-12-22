@@ -771,8 +771,8 @@ namespace DateABase.Objects
       intPronouns.Add(9, tempPronouns);
 
       return intPronouns[genderInt];
-
     }
+
     public static List<User> FilterByGender(int genderId)
     {
       List<User> filteredList = new List<User>{};
@@ -812,6 +812,14 @@ namespace DateABase.Objects
       }
       return filteredList;
 
+    }
+    public static void DeleteState()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("DELETE FROM state", conn);
+      cmd.ExecuteNonQuery();
+      conn.Close();
     }
     public void Delete()
     {
