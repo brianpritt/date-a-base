@@ -115,6 +115,7 @@ namespace DateABase
         model.Add("messageList", allUnreadMessages);
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
+        model.Add("selectedUser", currentUser);
         model.Add("state", true);
         model.Add("profilePic", profilePic.Url);
         return View["profile.cshtml", model];
@@ -342,8 +343,8 @@ namespace DateABase
       };
       Delete["/photo/{id}/delete"] = parameters => {
         User currentUser = User.GetCurrentUser();
-        User selectedUser = User.Find(parameters.uid);
-        Photo selectedPhoto = Photo.Find(parameters.pid);
+        User selectedUser = User.GetCurrentUser();
+        Photo selectedPhoto = Photo.Find(parameters.id);
         selectedPhoto.Delete();
         bool state = false;
         if(currentUser.Id == selectedUser.Id)
