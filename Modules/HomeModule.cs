@@ -50,6 +50,7 @@ namespace DateABase
           currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
           currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
           List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+          model.Add("selectedUser", currentUser);
           model.Add("messageList", allUnreadMessages);
           model.Add("message", "Welcome!");
           model.Add("user", currentUser);
