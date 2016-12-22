@@ -99,7 +99,7 @@ namespace  DateABase
     {
       Message newMessage = new Message(0, 0, "hello there! I'd like to byte your bits...");
       newMessage.Save();
-      newMessage.Delete();
+      newMessage.DeleteMessage();
       List<Message> allMessages = Message.GetAll();
       Assert.Equal(0, allMessages.Count);
     }

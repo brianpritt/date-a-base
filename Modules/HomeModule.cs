@@ -229,15 +229,15 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         Message currentMessage = Message.Find(parameters.Id);
         Console.WriteLine(currentMessage.Id);
-        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         List<User> allUsers = User.GetAll();
-        currentMessage.Delete();
+        currentMessage.DeleteMessage();
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
         messageDictionary.Add("message", "Message Deleted!");
         messageDictionary.Add("user", currentUser);
         messageDictionary.Add("messageList", allUnreadMessages);
         messageDictionary.Add("userList", allUsers);
-        return View["message_center.cshtml"];
+        return View["message_center.cshtml", messageDictionary];
       };
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
