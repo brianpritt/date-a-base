@@ -18,8 +18,10 @@ namespace DateABase.Objects
     public string TagLine {get; set;}
     public int Gender {get; set;}
     public int SeekGender {get; set;}
+    public string Genders {get; set;}
+    public string SeekGenders {get; set;}
 
-    private List<string> UserInput = new List<string>{};
+
 
     public User(string username, string password, string firstName = " ", string lastName = " ", string zipcode = " ", string email = " ", string tagLine = " ", string phoneNumber = " ", string aboutMe = " ", int gender = 0, int seekGender = 0, int id = 0)
     {
@@ -748,29 +750,39 @@ namespace DateABase.Objects
     }
 
 
-    public List<string> ConvertGender(int genderInt)
+    public string ConvertGender(int gender)
     {
       List<string> tempPronouns = new List<string>{};
+      List<string> tempPronouns1 = new List<string>{};
+      List<string> tempPronouns2 = new List<string>{};
+      List<string> tempPronouns3 = new List<string>{};
+      List<string> tempPronouns4 = new List<string>{};
+      List<string> tempPronouns5 = new List<string>{};
+      List<string> tempPronouns6 = new List<string>{};
       Dictionary<int, List<string>> intPronouns = new Dictionary<int, List<string>>(){};
       tempPronouns.Add("she");
       intPronouns.Add(1, tempPronouns);
-      tempPronouns[0] = ("he");
-      intPronouns.Add(3, tempPronouns);
-      tempPronouns[0] = "they";
-      intPronouns.Add(5, tempPronouns);
-      tempPronouns[0] = ("she");
-      tempPronouns.Add("he");
-      intPronouns.Add(4, tempPronouns);
-      tempPronouns[0] = ("she");
-      intPronouns.Add(6, tempPronouns);
-      tempPronouns[0] = "he";
-      intPronouns.Add(8, tempPronouns);
-      tempPronouns[0] = "she";
-      tempPronouns[1] = "he";
-      tempPronouns.Add("they");
-      intPronouns.Add(9, tempPronouns);
-
-      return intPronouns[genderInt];
+      tempPronouns1.Add("he");
+      intPronouns.Add(3, tempPronouns1);
+      tempPronouns2.Add("they");
+      intPronouns.Add(5, tempPronouns2);
+      tempPronouns3.Add("she");
+      tempPronouns3.Add("he");
+      intPronouns.Add(4, tempPronouns3);
+      tempPronouns4.Add("she");
+      tempPronouns4.Add("they");
+      intPronouns.Add(6, tempPronouns4);
+      tempPronouns5.Add("he");
+      tempPronouns5.Add("they");
+      intPronouns.Add(8, tempPronouns5);
+      tempPronouns6.Add("she");
+      tempPronouns6.Add("he");
+      tempPronouns6.Add("they");
+      intPronouns.Add(9, tempPronouns6);
+      List<string> resultList = intPronouns[gender];
+      List<string> resultList1 = intPronouns[3];
+      string result = String.Join(", ", resultList);
+      return result;
     }
 
     public static bool IsOdd(int value)

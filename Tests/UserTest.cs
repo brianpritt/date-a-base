@@ -129,14 +129,14 @@ namespace  DateABase
       Assert.Equal(true, userNameExists);
     }
     [Fact]
-    public void ConverGender_ChangesIntToListOfPronouns_true()
+    public void ConvertGender_ChangesIntToListOfPronouns_true()
     {
-      User newUser = new User("mamaBear", "honey", " ", " ", " ", " ", " ", " ", " ", 9, 4);
+      User newUser = new User("mamaBear", "honey", " ", " ", " ", " ", " ", " ", " ", 1, 4);
       newUser.Save();
-      List<string> actualPronouns = newUser.ConvertGender(newUser.Gender);
-      List<string> expectedPronouns = new List<string>{"she", "he", "they"};
-
-      Assert.Equal(expectedPronouns, actualPronouns);
+      string actual = newUser.ConvertGender(newUser.Gender);
+      List<string> expectedPronouns = new List<string>{"she"};
+      string expected = String.Join(", ", expectedPronouns);
+      Assert.Equal(expected, actual);
 
     }
     [Theory]
