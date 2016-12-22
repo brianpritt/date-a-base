@@ -60,13 +60,6 @@ namespace DateABase
         return View["profile.cshtml", model];
       };
 
-      Get["/user/update"] = _ => {
-        Dictionary<string, object> model = new Dictionary<string, object>();
-        User currentUser = User.GetCurrentUser();
-        model.Add("message", "Edit profile");
-        model.Add("user", currentUser);
-        return View["edit_profile.cshtml", model];
-      };
       Get["/profile/{id}"] = parameters => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         User currentUser = User.GetCurrentUser();
@@ -84,7 +77,13 @@ namespace DateABase
         model.Add("state", isUsersProfile);
         return View["profile.cshtml", model];
       };
-
+      Get["/user/update"] = _ => {
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        User currentUser = User.GetCurrentUser();
+        model.Add("message", "Edit profile");
+        model.Add("user", currentUser);
+        return View["edit_profile.cshtml", model];
+      };
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
         int seekGender = Request.Form["seek-gender"];
@@ -213,6 +212,20 @@ namespace DateABase
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];
       };
+      Delete["/user/message/{id}/delete"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        Message currentMessage = Message.Find(parameters.Id);
+        Console.WriteLine(currentMessage.Id);
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+        List<User> allUsers = User.GetAll();
+        currentMessage.Delete();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("message", "Message Deleted!");
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allUnreadMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml"];
+      };
 
       Get["/user/{id}/photos"] = parameters => {
         User currentUser = User.GetCurrentUser();
@@ -229,6 +242,21 @@ namespace DateABase
         model.Add("state", state);
         return View["photos.cshtml", model];
       };
+      Get["/user/{uid}/photo/{pid}"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.uid);
+        Photo selectedPhoto = Photo.Find(parameters.pid);
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", selectedUser);
+        model.Add("photo", selectedPhoto);
+        model.Add("state", state);
+        return View["photo.cshtml", model];
+      };
 
       Post["/photos/add"] = _ => {
         User currentUser = User.GetCurrentUser();
@@ -242,20 +270,24 @@ namespace DateABase
         model.Add("state", true);
         return View["photos.cshtml", model];
       };
-
-      Delete["/user/message/{id}/delete"] = parameters => {
+      Post["/photo/{id}/delete"] = parameters => {
         User currentUser = User.GetCurrentUser();
-        Message currentMessage = Message.Find(parameters.Id);
-        Console.WriteLine(currentMessage.Id);
-        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
-        List<User> allUsers = User.GetAll();
-        currentMessage.Delete();
-        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
-        messageDictionary.Add("message", "Message Deleted!");
-        messageDictionary.Add("user", currentUser);
-        messageDictionary.Add("messageList", allUnreadMessages);
-        messageDictionary.Add("userList", allUsers);
-        return View["message_center.cshtml"];
+        User selectedUser = User.Find(parameters.uid);
+        Photo selectedPhoto = Photo.Find(parameters.pid);
+        selectedPhoto.Delete();
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        List<Photo> usersPhotos = selectedUser.GetPhotos();
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        string message = "Picture has been deleted.";
+        model.Add("message", message);
+        model.Add("user", currentUser);
+        model.Add("photos", currentUser.GetPhotos());
+        model.Add("state", true);
+        return View["photos.cshtml", model];
       };
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
