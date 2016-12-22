@@ -93,7 +93,7 @@ namespace DateABase
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
         int seekGender = Request.Form["seek-gender"];
-        int gender = Request.Form["seek-gender"];
+        int gender = Request.Form["gender"];
         if (seekGender == 0)
         {
           seekGender = currentUser.SeekGender;
