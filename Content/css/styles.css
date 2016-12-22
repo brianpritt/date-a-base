@@ -13,8 +13,33 @@ img {
 
 }
 .well{
-  background: rgba(131, 204, 226, 0.5);
+  background: rgba(0, 0, 0, 0.1);
 }
 .centering{
   text-align: center;
+
+}
+body{
+  font-family: 'Space Mono', monospace;
+  background-color: rgb(32,103,178);
+  color: white;
+}
+a:link, a:visited,a:active{
+  color:white;
+}
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+   background:#999;
+}
+.small-picture
+{
+  border-radius: 100%;
+}
+.block
+{
+  display: inline;
 }

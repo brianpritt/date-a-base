@@ -264,7 +264,7 @@ namespace  DateABase
 
 
 
-      List<User> resultUsers = User.MatchByGender(newUser.Gender, newUser.SeekGender, newUser.Id);
+      List<User> resultUsers = newUser.MatchByGender(newUser.Gender, newUser.SeekGender, newUser.Id);
 
       Assert.Equal(result, resultUsers.Count);
     }
