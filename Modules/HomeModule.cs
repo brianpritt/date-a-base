@@ -64,7 +64,7 @@ namespace DateABase
         return View["profile.cshtml", model];
       };
 
-      Get["/profile/{id}"] = parameters => {
+      Get["/user/{id}"] = parameters => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         User currentUser = User.GetCurrentUser();
         User selectedUser = User.Find(parameters.id);
@@ -269,6 +269,61 @@ namespace DateABase
         model.Add("state", state);
         return View["photo.cshtml", model];
       };
+      Get["/user/{uid}/photo/{pid}/previous"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.uid);
+        Photo selectedPhoto = Photo.Find(parameters.pid);
+        List<Photo> allPhotos = selectedUser.GetPhotos();
+        int index = allPhotos.IndexOf(selectedPhoto);
+        Photo prevPhoto = null;
+        if(index == 0)
+        {
+          prevPhoto = allPhotos[allPhotos.Count-1];
+        }
+        if(index != 0)
+        {
+          prevPhoto = allPhotos[index-1];
+
+        }
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", selectedUser);
+        model.Add("photo", prevPhoto);
+        model.Add("state", state);
+        return View["photo.cshtml", model];
+      };
+
+      Get["/user/{uid}/photo/{pid}/next"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.uid);
+        Photo selectedPhoto = Photo.Find(parameters.pid);
+        List<Photo> allPhotos = selectedUser.GetPhotos();
+        int index = allPhotos.IndexOf(selectedPhoto);
+        Photo nextPhoto = null;
+        if(index == allPhotos.Count-1)
+        {
+          nextPhoto = allPhotos[0];
+        }
+        if(index != allPhotos.Count-1)
+        {
+          nextPhoto = allPhotos[index + 1];
+
+        }
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", selectedUser);
+        model.Add("photo", nextPhoto);
+        model.Add("state", state);
+        return View["photo.cshtml", model];
+      };
 
       Post["/photos/add"] = _ => {
         User currentUser = User.GetCurrentUser();
@@ -282,25 +337,42 @@ namespace DateABase
         model.Add("state", true);
         return View["photos.cshtml", model];
       };
-      Post["/photo/{id}/delete"] = parameters => {
-      User currentUser = User.GetCurrentUser();
-      User selectedUser = User.Find(parameters.uid);
-      Photo selectedPhoto = Photo.Find(parameters.pid);
-      selectedPhoto.Delete();
-      bool state = false;
-      if(currentUser.Id == selectedUser.Id)
-      {
-        state = true;
-      }
-      List<Photo> usersPhotos = selectedUser.GetPhotos();
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      string message = "Picture has been deleted.";
-      model.Add("message", message);
-      model.Add("user", currentUser);
-      model.Add("photos", currentUser.GetPhotos());
-      model.Add("state", state);
-      return View["photos.cshtml", model];
+      Delete["/photo/{id}/delete"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.uid);
+        Photo selectedPhoto = Photo.Find(parameters.pid);
+        selectedPhoto.Delete();
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        List<Photo> usersPhotos = selectedUser.GetPhotos();
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        string message = "Picture has been deleted.";
+        model.Add("message", message);
+        model.Add("user", currentUser);
+        model.Add("photos", currentUser.GetPhotos());
+        model.Add("state", state);
+        return View["photos.cshtml", model];
       };
+
+      // Get["/matches"] = _ => {
+      //   User currentUser = User.GetCurrentUser();
+      //   List<User> matches = User.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+      //   Dictionary<string, object> model = new Dictionary<string, object>();
+      //   model.Add("user", currentUser);
+      //   model.Add("matches", matches);
+      //   return View["matches.cshtml", model];
+      // };
+      // Get["/match/{id}"] = _ => {
+      //   User currentUser = User.GetCurrentUser();
+      //   List<User> matches = User.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+      //   Dictionary<string, object> model = new Dictionary<string, object>();
+      //   model.Add("user", currentUser);
+      //   model.Add("matches", matches);
+      //   return View["matches.cshtml", model];
+      // };
 
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
