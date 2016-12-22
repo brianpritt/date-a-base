@@ -983,7 +983,7 @@ namespace DateABase.Objects
           int userGender = rdr.GetInt32(10);
           int userSeekingGender = rdr.GetInt32(11);
 
-          User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
+          User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userTagLine, userPhoneNumber, userAboutMe, userGender, userSeekingGender, userId);
           matchList.Add(newUser);
         }
       }
