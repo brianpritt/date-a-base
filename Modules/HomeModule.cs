@@ -45,6 +45,8 @@ namespace DateABase
         if (loginStatus == true)
         {
           User.SetCurrentUser(currentUser);
+          List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+          model.Add("messageList", allUnreadMessages);
           model.Add("message", "Welcome!");
           model.Add("state", true);
           model.Add("user", currentUser);
@@ -71,10 +73,12 @@ namespace DateABase
         model.Add("user", selectedUser);
         bool isUsersProfile = false;
         Photo profilePic = selectedUser.GetProfilePhoto();
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         if (currentUser.Id == parameters.id)
         {
           isUsersProfile = true;
         }
+        model.Add("messageList", allUnreadMessages);
         model.Add("profilePic", profilePic.Url);
         model.Add("state", isUsersProfile);
         return View["profile.cshtml", model];
@@ -135,7 +139,9 @@ namespace DateABase
       Get["/user/{id}/message/send"] = parameters =>{
         User sendingUser = User.GetCurrentUser();
         User receivingUser = User.Find(parameters.id);
+        List<Message> allCorrespondence = sendingUser.GetCorrespondenceFromDater(receivingUser);
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("history", allCorrespondence);
         messageDictionary.Add("sender", sendingUser);
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];
