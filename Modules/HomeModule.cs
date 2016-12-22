@@ -133,6 +133,8 @@ namespace DateABase
       Get["/users"] = _ => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         List<User> allUsers = User.GetAll();
+        User currentUser = User.GetCurrentUser();
+        model.Add("user", currentUser);
         model.Add("users", allUsers);
         return View["profiles.cshtml", model];
       };
