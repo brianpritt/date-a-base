@@ -30,10 +30,7 @@ namespace DateABase
         string userName = Request.Form["user-name"];
         string userPassword = Request.Form["user-password"];
         bool loginStatus = User.CheckLogin(userName, userPassword);
-
         Dictionary<string, object> model = new Dictionary<string, object>();
-        Console.WriteLine("before if " + userName);
-
         User currentUser = User.FindByUserName(userName);
         if (loginStatus == true)
         {
@@ -41,12 +38,10 @@ namespace DateABase
           model.Add("message", "Welcome!");
           model.Add("state", true);
           model.Add("user", currentUser);
-          Console.WriteLine("inside true if " + currentUser.UserName);
         }
         if (loginStatus == false)
         {
           model.Add("message", "Invalid User Name or Password");
-          Console.WriteLine("inside false if " + currentUser.UserName);
           return View["index.cshtml", model];
         }
         return View["profile.cshtml", model];
@@ -72,7 +67,6 @@ namespace DateABase
         model.Add("state", isUsersProfile);
         return View["profile.cshtml", model];
       };
-
 
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
@@ -102,7 +96,7 @@ namespace DateABase
         model.Add("users", allUsers);
         return View["profiles.cshtml", model];
       };
-      Get["/user/messages"]= _ =>{
+      Get["/user/messages/"]= _ =>{
         User currentUser = User.GetCurrentUser();
         List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
@@ -146,6 +140,26 @@ namespace DateABase
         messageDictionary.Add("userList", allUsers);
         return View["message_center.cshtml", messageDictionary];
       };
+      Get["/user/messages/sent"] = _ => {
+        User currentUser = User.GetCurrentUser();
+        List<Message> allSentMessages = currentUser.GetAllSentMessages();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        List<User> allUsers = User.GetAll();
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allSentMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml", messageDictionary];
+      };
+      Get["/user/messages/all"] = _ => {
+        User currentUser = User.GetCurrentUser();
+        List<Message> allMessages = currentUser.GetAllReceivedMessages();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        List<User> allUsers = User.GetAll();
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml", messageDictionary];
+      };
       Get["user/messages/{id}"] = parameters => {
         User receivingUser = User.GetCurrentUser();
         Message currentMessage = Message.Find(parameters.Id);
@@ -165,6 +179,26 @@ namespace DateABase
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];
       };
+      Delete["/user/message/{id}/delete"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        Message currentMessage = Message.Find(parameters.Id);
+        Console.WriteLine(currentMessage.Id);
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+        List<User> allUsers = User.GetAll();
+        currentMessage.Delete();
+        Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
+        messageDictionary.Add("message", "Message Deleted!");
+        messageDictionary.Add("user", currentUser);
+        messageDictionary.Add("messageList", allUnreadMessages);
+        messageDictionary.Add("userList", allUsers);
+        return View["message_center.cshtml"];
+      };
+      Get["/logout"] =_=>{
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        User.DeleteState();
+        return View["index.cshtml",model];
+      };
+
     }
   }
 }

@@ -20,8 +20,11 @@
   </div>
 
     <button class="btn btn-info"type="button" name="reply"><a href="/user/messages/@Model["sender"].Id/reply">Reply</a></button>
-    <button class="btn btn-danger" type="button" name="button">Delete</button>
-  </form>
+    <form action="/user/message/@Model["user"].Id/delete" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+      <button class="btn btn-danger" type="submit" name="button">Delete</button>
+    </form>
+
   <p>
     <a href="/profile/@Model["user"].Id">Home</a>
   </p>
