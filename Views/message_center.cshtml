@@ -14,6 +14,10 @@
   <div class="jumbotron">
     <h1>@Model["user"].UserName 's Messages:</h1>
   </div>
+  <button class="btn btn-danger"type="button" name="button"><a href="/user/messages/read">View all read</a></button>
+  <button class="btn btn-info"type="button" name="button"><a href="/user/messages">View all unread</a></button>
+  <button class="btn btn-success"type="button" name="button"><a href="/user/messages/sent">View all sent</button>
+    <button class="btn btn-warning" type="button" name="button"><a href="/user/messages/all">View all</button>
     @foreach (var message in Model["messageList"])
     {
       foreach (var sender in Model["userList"])
@@ -25,9 +29,5 @@
       }
       <h3><a href="/user/messages/@message.Id">From: @senderName</a></h3>
     }
-    <button class="btn btn-danger"type="button" name="button"><a href="/user/messages/read">View all read</a></button>
-    <button class="btn btn-info"type="button" name="button">View all unread</button>
-    <button class="btn btn-success"type="button" name="button">View all sent</button>
-    <button class="btn btn-warning" type="button" name="button">View all</button>
   <h5><a href="/profile/@Model["user"].Id">Home</a></h5>
 </div>

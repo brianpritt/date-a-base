@@ -166,7 +166,7 @@ namespace DateABase.Objects
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-      SqlCommand cmd = new SqlCommand("DELETE FROM messages WHERE id = @MessageId; DELETE FROM state", conn);
+      SqlCommand cmd = new SqlCommand("DELETE FROM messages WHERE id = @MessageId;", conn);
       cmd.Parameters.AddWithValue("@MessageId", this.Id.ToString());
       cmd.ExecuteNonQuery();
 
