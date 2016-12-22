@@ -773,34 +773,207 @@ namespace DateABase.Objects
       return intPronouns[genderInt];
     }
 
-    public static List<User> FilterByGender(int genderId)
+    public static bool IsOdd(int value)
     {
-      List<User> filteredList = new List<User>{};
+    	return value % 2 != 0;
+    }
+    public static bool IsEven(int value)
+    {
+    	return value % 2 != 0;
+    }
+    public static List<User> MatchByGender(int genderId, int seekGenderId, int currentUserId)
+    {
+      int genderId2 = 0;
+      int genderId3 = 0;
+      int seekGenderId2 =0;
+      int seekGenderId3 = 0;
+
+
+      List<User> matchList = new List<User>{};
       SqlConnection conn = DB.Connection();
       conn.Open();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender;", conn);
-      cmd.Parameters.AddWithValue("@Gender", genderId);
+      SqlCommand cmd = null;
+
+      if(genderId == 9)
+      {
+        if (seekGenderId == 9)
+        {
+          cmd = new SqlCommand("SELECT * FROM users;", conn);
+        }
+        else if (IsOdd(seekGenderId))
+        {
+          cmd = new SqlCommand("SELECT * FROM users WHERE gender_identity = @SeekGender;", conn);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+
+        }
+        else
+        {
+          if(seekGenderId == 4)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 3;
+            seekGenderId3 = 4;
+
+          }
+          else if(seekGenderId == 6)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 5;
+            seekGenderId3 = 6;
+
+          }
+          else
+          {
+            seekGenderId = 3;
+            seekGenderId2 = 5;
+            seekGenderId3 = 8;
+          }
+          cmd = new SqlCommand("SELECT * FROM users WHERE gender_identity = @SeekGender OR gender_identity = @SeekGender2 OR gender_identity = @SeekGender3;", conn);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+          cmd.Parameters.AddWithValue("@SeekGender2", seekGenderId2);
+          cmd.Parameters.AddWithValue("@SeekGender3", seekGenderId3);
+
+        }
+      }
+
+      else if(IsOdd(genderId))
+      {
+        if (seekGenderId == 9)
+        {
+          cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender;", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+
+        }
+        else if (IsOdd(seekGenderId))
+        {
+          cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender AND gender_identity = @SeekGender;", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+
+        }
+        else {
+          if(seekGenderId == 4)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 3;
+            seekGenderId3 = 4;
+
+          }
+          else if(seekGenderId == 6)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 5;
+            seekGenderId3 = 6;
+
+          }
+          else
+          {
+            seekGenderId = 3;
+            seekGenderId2 = 5;
+            seekGenderId3 = 8;
+          }
+          cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender AND (gender_identity = @SeekGender OR gender_identity = @SeekGender2 OR gender_identity = @SeekGender3);", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+          cmd.Parameters.AddWithValue("@SeekGender2", seekGenderId2);
+          cmd.Parameters.AddWithValue("@SeekGender3", seekGenderId3);
+        }
+      }
+      else
+      {
+        if(genderId == 4)
+        {
+          genderId = 1;
+          genderId2 = 3;
+          genderId3 = 4;
+
+        }
+        else if(genderId == 6)
+        {
+          genderId = 1;
+          genderId2 = 5;
+          genderId3 = 6;
+
+        }
+        else
+        {
+          genderId = 3;
+          genderId2 = 5;
+          genderId3 = 8;
+
+        }
+        if(seekGenderId == 9)
+        {
+          cmd = new SqlCommand("SELECT * FROM users WHERE seeking_gender = @Gender OR seeking_gender = @Gender2 OR seeking_gender = @Gender3;", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+          cmd.Parameters.AddWithValue("@Gender2", genderId2);
+          cmd.Parameters.AddWithValue("@Gender3", genderId3);
+        }
+        else if(IsOdd(seekGenderId))
+        {
+          cmd = new SqlCommand("SELECT * FROM users WHERE (seeking_gender = @Gender OR seeking_gender = @Gender2 OR seeking_gender = @Gender3) AND gender_identity = @SeekGender;", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+          cmd.Parameters.AddWithValue("@Gender2", genderId2);
+          cmd.Parameters.AddWithValue("@Gender3", genderId3);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+
+        }
+        else
+        {
+          if(seekGenderId == 4)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 3;
+            seekGenderId3 = 4;
+
+          }
+          else if(seekGenderId == 6)
+          {
+            seekGenderId = 1;
+            seekGenderId2 = 5;
+            seekGenderId3 = 6;
+
+          }
+          else
+          {
+            seekGenderId = 3;
+            seekGenderId2 = 5;
+            seekGenderId3 = 8;
+          }
+          cmd = new SqlCommand("SELECT * FROM users WHERE (seeking_gender = @Gender OR seeking_gender = @Gender2 OR seeking_gender = @Gender3) AND (gender_identity = @SeekGender OR gender_identity = @SeekGender2 OR gender_identity = @SeekGender3);", conn);
+          cmd.Parameters.AddWithValue("@Gender", genderId);
+          cmd.Parameters.AddWithValue("@Gender2", genderId2);
+          cmd.Parameters.AddWithValue("@Gender3", genderId3);
+          cmd.Parameters.AddWithValue("@SeekGender", seekGenderId);
+          cmd.Parameters.AddWithValue("@SeekGender2", seekGenderId2);
+          cmd.Parameters.AddWithValue("@SeekGender3", seekGenderId3);
+        }
+      }
+
       SqlDataReader rdr = cmd.ExecuteReader();
 
 
       while(rdr.Read())
       {
         int userId = rdr.GetInt32(0);
-        string userFirstName = rdr.GetString(1);
-        string userLastName = rdr.GetString(2);
-        string userZipCode = rdr.GetString(3);
-        string userEmail = rdr.GetString(6);
-        string userPhoneNumber = rdr.GetString(4);
-        string userAboutMe = rdr.GetString(5);
-        string userTagLine = rdr.GetString(7);
-        string userUserName = rdr.GetString(8);
-        string userPassword = rdr.GetString(9);
-        int userGender = rdr.GetInt32(10);
-        int userSeekingGender = rdr.GetInt32(11);
+        if(userId != currentUserId)
+        {
+          string userFirstName = rdr.GetString(1);
+          string userLastName = rdr.GetString(2);
+          string userZipCode = rdr.GetString(3);
+          string userEmail = rdr.GetString(6);
+          string userPhoneNumber = rdr.GetString(4);
+          string userAboutMe = rdr.GetString(5);
+          string userTagLine = rdr.GetString(7);
+          string userUserName = rdr.GetString(8);
+          string userPassword = rdr.GetString(9);
+          int userGender = rdr.GetInt32(10);
+          int userSeekingGender = rdr.GetInt32(11);
 
-        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
-        filteredList.Add(newUser);
+          User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userPhoneNumber, userAboutMe, userTagLine, userGender, userSeekingGender, userId);
+          matchList.Add(newUser);
+        }
       }
       if(rdr!=null)
       {
@@ -810,7 +983,7 @@ namespace DateABase.Objects
       {
         conn.Close();
       }
-      return filteredList;
+      return matchList;
 
     }
     public static void DeleteState()
