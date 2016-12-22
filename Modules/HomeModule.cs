@@ -356,6 +356,7 @@ namespace DateABase
         string message = "Picture has been deleted.";
         model.Add("message", message);
         model.Add("user", currentUser);
+        model.Add("selectedUser", selectedUser);
         model.Add("photos", currentUser.GetPhotos());
         model.Add("state", state);
         return View["photos.cshtml", model];
