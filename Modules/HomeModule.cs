@@ -45,9 +45,12 @@ namespace DateABase
         if (loginStatus == true)
         {
           User.SetCurrentUser(currentUser);
+          currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
+          currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
           model.Add("message", "Welcome!");
           model.Add("state", true);
           model.Add("user", currentUser);
+          model.Add("profilePic", currentUser.GetProfilePhoto());
         }
         if (loginStatus == false)
         {
@@ -68,6 +71,8 @@ namespace DateABase
         Dictionary<string, object> model = new Dictionary<string, object>();
         User currentUser = User.GetCurrentUser();
         User selectedUser = User.Find(parameters.id);
+        selectedUser.Genders = selectedUser.ConvertGender(selectedUser.Gender);
+        selectedUser.SeekGenders = selectedUser.ConvertGender(selectedUser.SeekGender);
         model.Add("user", selectedUser);
         bool isUsersProfile = false;
         Photo profilePic = selectedUser.GetProfilePhoto();
@@ -82,11 +87,24 @@ namespace DateABase
 
       Patch["/user/update"] = _ => {
         User currentUser = User.GetCurrentUser();
-        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"], Request.Form["gender"], Request.Form["seek-gender"]);
+        int seekGender = Request.Form["seek-gender"];
+        int gender = Request.Form["seek-gender"];
+        if (seekGender == 0)
+        {
+          seekGender = currentUser.SeekGender;
+        }
+        if (gender == 0)
+        {
+          gender = currentUser.SeekGender;
+        }
+        currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"], gender, seekGender);
         Dictionary<string, object> model = new Dictionary<string, object>();
         Photo profilePic = new Photo(currentUser.Id, Request.Form["profile-pic"]);
         currentUser.AddPhoto(profilePic);
         profilePic.MakeProfile(currentUser.Id);
+        currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
+        currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
+
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
         model.Add("state", true);
