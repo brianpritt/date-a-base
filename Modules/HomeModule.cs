@@ -388,8 +388,14 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
         User matchUser = currentUser.FindMatch(parameters.id);
-        Console.WriteLine(index);
-        int index = matches.IndexOf(matchUser);
+        List<int> matchesInts = new List<int>{};
+
+        foreach(User match in matches)
+        {
+          matchesInts.Add(match.Id);
+        }
+
+        int index = matchesInts.IndexOf(matchUser.Id);
         Console.WriteLine(index);
         User prevMatch = null;
         if(index == 0)
@@ -409,7 +415,13 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
         User matchUser = currentUser.FindMatch(parameters.id);
-        int index = matches.IndexOf(matchUser);
+        List<int> matchesInts = new List<int>{};
+        foreach(User match in matches)
+        {
+          matchesInts.Add(match.Id);
+        }
+
+        int index = matchesInts.IndexOf(matchUser.Id);        Console.WriteLine(index);
         User nextMatch = null;
         if(index == matches.Count-1)
         {
