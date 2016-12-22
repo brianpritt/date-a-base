@@ -43,3 +43,12 @@ a:link, a:visited,a:active{
 {
   display: inline;
 }
+.filter{
+  display:inline-block;
+  padding 5px;
+  border: 1px solid coral;
+  border-radius: 3px;
+}
+.photo-nav{
+  margin-right: 5px;
+}
