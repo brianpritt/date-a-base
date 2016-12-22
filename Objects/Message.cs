@@ -162,7 +162,7 @@ namespace DateABase.Objects
 
 
 
-    public void Delete()
+    public void DeleteMessage()
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
@@ -170,7 +170,7 @@ namespace DateABase.Objects
       cmd.Parameters.AddWithValue("@MessageId", this.Id.ToString());
       cmd.ExecuteNonQuery();
 
-      if(conn!=null)
+      if(conn != null)
       {
         conn.Close();
       }

@@ -7,7 +7,10 @@
   <h3>@Model["message"]</h3>
 }
 <div class="container">
+  <div class="row">
+
   <h2>Welcome to Date-A-Base</h2><br>
+  <div class="sign-in col-md-6">
   <form action="/sign-in" method="post">
     <h2>Sign-In</h2>
     <label for="user-name">Username</label>
@@ -17,7 +20,8 @@
     <br>
     <button type="submit">Enter</button>
   </form>
-
+</div>
+<div class="sign-in col-md-6">
   <form action="/sign-up" method="post">
     <h2>Sign-Up</h2>
     <label for="new-user-name">New Username:</label>
@@ -27,4 +31,6 @@
     <br>
     <button type="submit">Enter</button>
   </form>
+</div>
+</div>
 </div>
