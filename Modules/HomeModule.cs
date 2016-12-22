@@ -64,7 +64,7 @@ namespace DateABase
         return View["profile.cshtml", model];
       };
 
-      Get["/profile/{id}"] = parameters => {
+      Get["/user/{id}"] = parameters => {
         Dictionary<string, object> model = new Dictionary<string, object>();
         User currentUser = User.GetCurrentUser();
         User selectedUser = User.Find(parameters.id);
@@ -306,9 +306,9 @@ namespace DateABase
         {
           nextPhoto = allPhotos[0];
         }
-        if(index != 0)
+        if(index != allPhotos.Count-1)
         {
-          nextPhoto = allPhotos[index+1];
+          nextPhoto = allPhotos[index + 1];
 
         }
         bool state = false;

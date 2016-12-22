@@ -17,7 +17,7 @@
 <ul>
   @foreach(var photo in Model["photos"])
   {
-    <li><a href='photo/@photo.Id'><img src="@photo.Url"/></a></li>
+    <li><a href="/user/@Model["user"].Id/photo/@photo.Id"><img src="@photo.Url"/></a></li>
   }
 </ul>
 <a href="/users">View All Profiles</a>
