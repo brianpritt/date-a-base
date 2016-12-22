@@ -793,7 +793,7 @@ namespace DateABase.Objects
     {
     	return value % 2 != 0;
     }
-    public static List<User> MatchByGender(int genderId, int seekGenderId, int currentUserId)
+    public List<User> MatchByGender(int genderId, int seekGenderId, int currentUserId)
     {
       int genderId2 = 0;
       int genderId3 = 0;
@@ -995,8 +995,119 @@ namespace DateABase.Objects
       {
         conn.Close();
       }
+      this.AddMatchesToTable(matchList);
       return matchList;
 
+    }
+    public void AddMatchesToTable(List<User> matchList)
+    {
+      foreach(User match in matchList)
+      {
+        SqlConnection conn = DB.Connection();
+        conn.Open();
+        SqlCommand cmd = new SqlCommand("INSERT INTO matches (user1_id, user2_id) VALUES (@User1Id, @User2Id);", conn);
+        cmd.Parameters.AddWithValue("@User1Id", this.Id.ToString());
+        cmd.Parameters.AddWithValue("@User2Id", match.Id.ToString());
+        cmd.ExecuteNonQuery();
+        if (conn != null)
+        {
+          conn.Close();
+        }
+      }
+    }
+    public List<User> GetMatchesFromDB()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("SELECT users.* FROM users JOIN matches ON(user.id = matches.user2_id);", conn);
+      SqlDataReader rdr = cmd.ExecuteReader();
+      List<User> allMatches = new List<User>{};
+      while(rdr.Read())
+      {
+        int userId = rdr.GetInt32(0);
+        string userFirstName = rdr.GetString(1);
+        string userLastName = rdr.GetString(2);
+        string userZipCode = rdr.GetString(3);
+        string userEmail = rdr.GetString(6);
+        string userPhoneNumber = rdr.GetString(4);
+        string userAboutMe = rdr.GetString(5);
+        string userTagLine = rdr.GetString(7);
+        string userUserName = rdr.GetString(8);
+        string userPassword = rdr.GetString(9);
+        int userGender = rdr.GetInt32(10);
+        int userSeekingGender = rdr.GetInt32(11);
+
+        User newUser = new User(userUserName, userPassword, userFirstName, userLastName, userZipCode, userEmail, userTagLine, userPhoneNumber, userAboutMe, userGender, userSeekingGender, userId);
+        allMatches.Add(newUser);
+      }
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+      return allMatches;
+    }
+    public User FindMatch(int id)
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+
+      SqlCommand cmd = new SqlCommand("SELECT users.* FROM matches JOIN users ON (users.id = matches.user2_id) WHERE matches.id = @MatchUserId;", conn);
+      cmd.Parameters.AddWithValue("@MatchUserId", id.ToString());
+      SqlDataReader rdr = cmd.ExecuteReader();
+      int foundUserId = 0;
+      string foundFirstName = null;
+      string foundLastName = null;
+      string foundZipCode = null;
+      string foundPhoneNumber = null;
+      string foundAboutMe = null;
+      string foundEmail = null;
+      string foundTagLine = null;
+      string foundUserName = null;
+      string foundPassword = null;
+      int foundGender = 0;
+      int foundSeekGender = 0;
+
+      while(rdr.Read())
+      {
+        foundUserId = rdr.GetInt32(0);
+        foundFirstName = rdr.GetString(1);
+        foundLastName = rdr.GetString(2);
+        foundZipCode = rdr.GetString(3);
+        foundEmail = rdr.GetString(4);
+        foundPhoneNumber = rdr.GetString(5);
+        foundAboutMe = rdr.GetString(6);
+        foundTagLine = rdr.GetString(7);
+        foundUserName = rdr.GetString(8);
+        foundPassword = rdr.GetString(9);
+        foundGender = rdr.GetInt32(10);
+        foundSeekGender = rdr.GetInt32(11);
+
+      }
+      User foundUser = new User(foundUserName, foundPassword, foundFirstName, foundLastName, foundZipCode, foundEmail, foundTagLine, foundPhoneNumber, foundAboutMe, foundGender, foundSeekGender, foundUserId);
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      if (conn != null)
+      {
+        conn.Close();
+      }
+
+      return foundUser;
+
+    }
+    public static void DeleteMatches()
+    {
+      SqlConnection conn = DB.Connection();
+      conn.Open();
+      SqlCommand cmd = new SqlCommand("DELETE FROM matches", conn);
+      cmd.ExecuteNonQuery();
+      conn.Close();
     }
     public static void DeleteState()
     {

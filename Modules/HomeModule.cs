@@ -360,22 +360,61 @@ namespace DateABase
         return View["photos.cshtml", model];
       };
 
-      // Get["/matches"] = _ => {
-      //   User currentUser = User.GetCurrentUser();
-      //   List<User> matches = User.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
-      //   Dictionary<string, object> model = new Dictionary<string, object>();
-      //   model.Add("user", currentUser);
-      //   model.Add("matches", matches);
-      //   return View["matches.cshtml", model];
-      // };
-      // Get["/match/{id}"] = _ => {
-      //   User currentUser = User.GetCurrentUser();
-      //   List<User> matches = User.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
-      //   Dictionary<string, object> model = new Dictionary<string, object>();
-      //   model.Add("user", currentUser);
-      //   model.Add("matches", matches);
-      //   return View["matches.cshtml", model];
-      // };
+      Get["/matches"] = _ => {
+        User currentUser = User.GetCurrentUser();
+        List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", currentUser);
+        model.Add("matches", matches);
+        return View["matches.cshtml", model];
+      };
+      Get["/match/{id}"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        User matchUser = currentUser.FindMatch(parameters.id);
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", currentUser);
+        model.Add("match", matchUser);
+        return View["match.cshtml", model];
+      };
+      Get["/match/{id}/previous"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        User matchUser = currentUser.FindMatch(parameters.id);
+        int index = matches.IndexOf(matchUser);
+        User prevMatch = null;
+        if(index ==0)
+        {
+          prevMatch = matches[matches.Count-1];
+        }
+        if(index !=0)
+        {
+          prevMatch = matches[index-1];
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", currentUser);
+        model.Add("match", prevMatch);
+        return View["match.cshtml", model];
+      };
+      Get["/match/{id}/next"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        User matchUser = currentUser.FindMatch(parameters.id);
+        int index = matches.IndexOf(matchUser);
+        User nextMatch = null;
+        if(index == matches.Count-1)
+        {
+          nextMatch = matches[0];
+        }
+        if(index !=  matches.Count-1)
+        {
+          nextMatch = matches[index+1];
+        }
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", currentUser);
+        model.Add("match", nextMatch);
+        return View["match.cshtml", model];
+      };
 
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
