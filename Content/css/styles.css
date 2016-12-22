@@ -1,10 +1,6 @@
 .hidden-button{
   display: none;
 }
-/*#log-out-h4 {
-  float: right;
-  padding-right: 50px;
-}*/
 img {
   width: 20%;
   height: 20%;
@@ -14,5 +10,11 @@ img {
   height: 100px;
 }
 .sign-in{
-  ;
+
+}
+.well{
+  background: rgba(131, 204, 226, 0.5);
+}
+.centering{
+  text-align: center;
 }

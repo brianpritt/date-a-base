@@ -70,7 +70,8 @@ namespace DateABase
         User selectedUser = User.Find(parameters.id);
         selectedUser.Genders = selectedUser.ConvertGender(selectedUser.Gender);
         selectedUser.SeekGenders = selectedUser.ConvertGender(selectedUser.SeekGender);
-        model.Add("user", selectedUser);
+        model.Add("selectedUser", selectedUser);
+        model.Add("user", currentUser);
         bool isUsersProfile = false;
         Photo profilePic = selectedUser.GetProfilePhoto();
         List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
@@ -248,7 +249,8 @@ namespace DateABase
         }
         List<Photo> usersPhotos = selectedUser.GetPhotos();
         Dictionary<string, object> model = new Dictionary<string, object>();
-        model.Add("user", selectedUser);
+        model.Add("user", currentUser);
+        model.Add("selectedUser", selectedUser);
         model.Add("photos", usersPhotos);
         model.Add("state", state);
         return View["photos.cshtml", model];
