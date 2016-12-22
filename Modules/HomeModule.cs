@@ -16,13 +16,23 @@ namespace DateABase
         return View["index.cshtml",model];
       };
       Post["/sign-up"] =_=>{
-        User newUser = new User(Request.Form["new-user-name"], Request.Form["new-user-password"]);
-        newUser.Save();
-        User.SetCurrentUser(newUser);
+        bool taken = User.CheckUserName(Request.Form["new-user-name"]);
         Dictionary<string, object> model = new Dictionary<string, object>();
-        User currentUser = User.GetCurrentUser();
-        model.Add("message", "Create new profile");
-        model.Add("user", currentUser);
+        if(taken)
+        {
+          string message  = "The username " + Request.Form["new-user-name"] + " is taken. Please choose another.";
+          model.Add("message", message);
+          return View["index.cshtml", model];
+        }
+        if(!taken)
+        {
+          User newUser = new User(Request.Form["new-user-name"], Request.Form["new-user-password"]);
+          newUser.Save();
+          User.SetCurrentUser(newUser);
+          User currentUser = User.GetCurrentUser();
+          model.Add("message", "Create new profile");
+          model.Add("user", currentUser);
+        }
         return View["edit_profile.cshtml", model];
       };
 
@@ -60,10 +70,12 @@ namespace DateABase
         User selectedUser = User.Find(parameters.id);
         model.Add("user", selectedUser);
         bool isUsersProfile = false;
+        Photo profilePic = selectedUser.GetProfilePhoto();
         if (currentUser.Id == parameters.id)
         {
           isUsersProfile = true;
         }
+        model.Add("profilePic", profilePic.Url);
         model.Add("state", isUsersProfile);
         return View["profile.cshtml", model];
       };
@@ -72,9 +84,13 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         currentUser.Edit(Request.Form["user-name"], Request.Form["user-password"], Request.Form["first-name"], Request.Form["last-name"], Request.Form["zip-code"],Request.Form["email"], Request.Form["tag-line"], Request.Form["phone-number"],  Request.Form["about"], Request.Form["gender"], Request.Form["seek-gender"]);
         Dictionary<string, object> model = new Dictionary<string, object>();
+        Photo profilePic = new Photo(currentUser.Id, Request.Form["profile-pic"]);
+        currentUser.AddPhoto(profilePic);
+        profilePic.MakeProfile(currentUser.Id);
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
         model.Add("state", true);
+        model.Add("profilePic", profilePic.Url);
         return View["profile.cshtml", model];
       };
       Delete["/user/delete"] = _ => {
@@ -179,6 +195,36 @@ namespace DateABase
         messageDictionary.Add("receiver", receivingUser);
         return View["create_message.cshtml", messageDictionary];
       };
+
+      Get["/user/{id}/photos"] = parameters => {
+        User currentUser = User.GetCurrentUser();
+        User selectedUser = User.Find(parameters.id);
+        bool state = false;
+        if(currentUser.Id == selectedUser.Id)
+        {
+          state = true;
+        }
+        List<Photo> usersPhotos = selectedUser.GetPhotos();
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        model.Add("user", selectedUser);
+        model.Add("photos", usersPhotos);
+        model.Add("state", state);
+        return View["photos.cshtml", model];
+      };
+
+      Post["/photos/add"] = _ => {
+        User currentUser = User.GetCurrentUser();
+        Photo newPhoto = new Photo(currentUser.Id, Request.Form["new-photo"], false);
+        currentUser.AddPhoto(newPhoto);
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        string message = "Picture has been added.";
+        model.Add("message", message);
+        model.Add("user", currentUser);
+        model.Add("photos", currentUser.GetPhotos());
+        model.Add("state", true);
+        return View["photos.cshtml", model];
+      };
+
       Delete["/user/message/{id}/delete"] = parameters => {
         User currentUser = User.GetCurrentUser();
         Message currentMessage = Message.Find(parameters.Id);
@@ -198,7 +244,6 @@ namespace DateABase
         User.DeleteState();
         return View["index.cshtml",model];
       };
-
     }
   }
 }

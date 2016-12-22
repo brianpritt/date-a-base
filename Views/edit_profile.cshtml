@@ -43,6 +43,10 @@
       <label for="seek-gender">Gender Seeking</label>
       <input class = "form-control" type="text" name="seek-gender" value = "@user.SeekGender" required>
     </div>
+    <div class= "form-group">
+      <label for="profile-pic">Profile Picture</label>
+      <input class = "form-control" type="text" name="profile-pic">
+    </div>
     @if(Model["message"] == "Edit profile")
     {
       <button type="submit" class="btn btn-info">Update Profile</button>

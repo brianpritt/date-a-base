@@ -8,11 +8,14 @@
 }
 <div class="container">
   <div class="jumbotron">
-    <h1>@Model["user"].UserName</h1>
-    <h3>@Model["user"].FirstName @Model["user"].LastName</h3>
-    <h3>@Model["user"].ZipCode</h3>
-    <h3>@Model["user"].Email</h3>
-    <p>@Model["user"].AboutMe</p>
+    <h1>@Model["user"].FirstName @Model["user"].LastName</h1>
+    <h3>@Model["user"].TagLine</h3>
+    <h4>username: @Model["user"].UserName</h4>
+    <h6>zip-code: @Model["user"].ZipCode</h6>
+    <h6>email; @Model["user"].Email</h6>
+    <p>about me: @Model["user"].AboutMe</p>
+    <img src="@Model["profilePic"]" alt="profile picture" id="profilePic"/>
+
 
   @if(Model.ContainsKey("state"))
   {
@@ -27,5 +30,6 @@
     }
   }
   <button type="button" name="button" class="btn btn-info"><a href="/users">View All Profiles</a></button>
+  <a href='/user/@Model["user"].Id/photos'>Photos</a>
   </div>
 </div>
