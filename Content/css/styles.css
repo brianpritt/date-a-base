@@ -5,3 +5,11 @@
   float: right;
   padding-right: 50px;
 }
+img {
+  width: 20%;
+  height: 20%;
+}
+#profilePic {
+  width: 100px;
+  height: 100px;
+}

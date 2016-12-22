@@ -1,0 +1,24 @@
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+<h3>Pictures</h3>
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
+@if(Model["state"] == true)
+{
+  <form action="/photos/add" method="post">
+    <label for="new-photo">Add a photo (URL please!)</label>
+    <input type="text" name="new-photo">
+    <button type="submit">Add Photo</button>
+  </form>
+}
+<ul>
+  @foreach(var photo in Model["photos"])
+  {
+    <li><a href='photo/@photo.Id'><img src="@photo.Url"/></a></li>
+  }
+</ul>
+<a href="/users">View All Profiles</a>
+<a href='/user/@Model["user"].Id'>View Profile</a>
