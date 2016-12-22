@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+@{
+  Layout="Shared/_Layout.cshtml";
+}
+@if(Model.ContainsKey("message"))
+{
+  <h3>@Model["message"]</h3>
+}
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <img src="@Model["user"].GetProfilePhoto().Url" alt="profile picture" id="profilePic" class="small-picture"/>
+      <h4><a href="/user/@Model["user"].Id">My Profile</a></h4>
+      <h4><a href="/users">View All Profiles</a></h4>
+      <h4><a href="/user/messages">View Messages</a></h4>
+      <br>
+      <h4 id="log-out-h4"><a href="/logout">Log-Out</a></h4>
+    </div>
+    <div class="col-md-10">
+      <h2>Profiles</h2><hr>
+        @foreach(var profile in Model["matches"])
+        {
+          <img src="@profile.GetProfilePhoto().Url" alt="profile picture" id="profilePic" class="small-picture"/>
+          <h2 class="block"><a href="/match/@profile.Id">@profile.FirstName</a> : </h2>
+          <h4 class="block">@profile.TagLine</h4>
+          <br>
+        }
+
+      <form action="/tag/search" method="post">
+        <label for="tag"></label>
+        <input class="form-control"type="text" name="tag">
+        <button class="btn btn-info"type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</div>

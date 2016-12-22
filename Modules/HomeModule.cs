@@ -358,6 +358,7 @@ namespace DateABase
         string message = "Picture has been deleted.";
         model.Add("message", message);
         model.Add("user", currentUser);
+        model.Add("selectedUser", selectedUser);
         model.Add("photos", currentUser.GetPhotos());
         model.Add("state", state);
         return View["photos.cshtml", model];
@@ -366,11 +367,16 @@ namespace DateABase
       Get["/matches"] = _ => {
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
+        currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
+        currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
         Dictionary<string, object> model = new Dictionary<string, object>();
+        string message = "Showing " + currentUser.SeekGenders + " seeking " + currentUser.Genders;
+        model.Add("message", message);
         model.Add("user", currentUser);
         model.Add("matches", matches);
         return View["matches.cshtml", model];
       };
+
       Get["/match/{id}"] = parameters => {
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
@@ -384,13 +390,15 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
         User matchUser = currentUser.FindMatch(parameters.id);
+        Console.WriteLine(index);
         int index = matches.IndexOf(matchUser);
+        Console.WriteLine(index);
         User prevMatch = null;
-        if(index ==0)
+        if(index == 0)
         {
           prevMatch = matches[matches.Count-1];
         }
-        if(index !=0)
+        if(index != 0)
         {
           prevMatch = matches[index-1];
         }
@@ -421,6 +429,7 @@ namespace DateABase
 
       Get["/logout"] =_=>{
         Dictionary<string, object> model = new Dictionary<string, object>();
+        User.DeleteMatches();
         User.DeleteState();
         return View["index.cshtml",model];
       };
