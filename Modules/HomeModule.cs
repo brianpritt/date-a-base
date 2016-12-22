@@ -52,9 +52,9 @@ namespace DateABase
           List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
           model.Add("messageList", allUnreadMessages);
           model.Add("message", "Welcome!");
-          model.Add("state", true);
           model.Add("user", currentUser);
-          model.Add("profilePic", currentUser.GetProfilePhoto());
+          model.Add("state", true);
+          model.Add("profilePic", currentUser.GetProfilePhoto().Url);
         }
         if (loginStatus == false)
         {
@@ -109,7 +109,8 @@ namespace DateABase
         profilePic.MakeProfile(currentUser.Id);
         currentUser.Genders = currentUser.ConvertGender(currentUser.Gender);
         currentUser.SeekGenders = currentUser.ConvertGender(currentUser.SeekGender);
-
+        List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
+        model.Add("messageList", allUnreadMessages);
         model.Add("message", "Your profile has been updated");
         model.Add("user", currentUser);
         model.Add("state", true);
@@ -226,7 +227,7 @@ namespace DateABase
         Console.WriteLine(currentMessage.Id);
         List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         List<User> allUsers = User.GetAll();
-        currentMessage.Delete();
+        currentMessage.DeleteMessage();
         Dictionary<string, object> messageDictionary = new Dictionary<string, object>();
         messageDictionary.Add("message", "Message Deleted!");
         messageDictionary.Add("user", currentUser);
@@ -250,6 +251,7 @@ namespace DateABase
         model.Add("state", state);
         return View["photos.cshtml", model];
       };
+
       Get["/user/{uid}/photo/{pid}"] = parameters => {
         User currentUser = User.GetCurrentUser();
         User selectedUser = User.Find(parameters.uid);
@@ -294,7 +296,7 @@ namespace DateABase
       model.Add("message", message);
       model.Add("user", currentUser);
       model.Add("photos", currentUser.GetPhotos());
-      model.Add("state", true);
+      model.Add("state", state);
       return View["photos.cshtml", model];
       };
 
