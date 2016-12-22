@@ -388,13 +388,15 @@ namespace DateABase
         User currentUser = User.GetCurrentUser();
         List<User> matches = currentUser.MatchByGender(currentUser.Gender, currentUser.SeekGender, currentUser.Id);
         User matchUser = currentUser.FindMatch(parameters.id);
+        Console.WriteLine(index);
         int index = matches.IndexOf(matchUser);
+        Console.WriteLine(index);
         User prevMatch = null;
-        if(index ==0)
+        if(index == 0)
         {
           prevMatch = matches[matches.Count-1];
         }
-        if(index !=0)
+        if(index != 0)
         {
           prevMatch = matches[index-1];
         }
