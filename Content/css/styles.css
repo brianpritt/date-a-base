@@ -5,7 +5,7 @@ img {
   width: 20%;
   height: 20%;
 }
-#profilePic {
+#profilePic, #listPic {
   width: 100px;
   height: 100px;
 }
@@ -42,4 +42,13 @@ a:link, a:visited,a:active{
 .block
 {
   display: inline;
+}
+.filter{
+  display:inline-block;
+  padding 5px;
+  border: 1px solid coral;
+  border-radius: 3px;
+}
+.photo-nav{
+  margin-right: 5px;
 }

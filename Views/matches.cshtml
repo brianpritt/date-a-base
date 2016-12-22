@@ -2,10 +2,7 @@
 @{
   Layout="Shared/_Layout.cshtml";
 }
-@if(Model.ContainsKey("message"))
-{
-  <h3>@Model["message"]</h3>
-}
+
 <div class="container">
   <div class="row">
     <div class="col-md-2">
@@ -18,6 +15,7 @@
     </div>
     <div class="col-md-10">
       <h2>Profiles</h2><hr>
+      @if(Model.ContainsKey("message")){<h3>@Model["message"]</h3>}
         @foreach(var profile in Model["matches"])
         {
           <img src="@profile.GetProfilePhoto().Url" alt="profile picture" id="profilePic" class="small-picture"/>
@@ -26,11 +24,11 @@
           <br>
         }
 
-      <form action="/tag/search" method="post">
+      @* <form action="/tag/search" method="post">
         <label for="tag"></label>
         <input class="form-control"type="text" name="tag">
         <button class="btn btn-info"type="submit">Search</button>
-      </form>
+      </form> *@
     </div>
   </div>
 </div>

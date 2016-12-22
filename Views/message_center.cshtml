@@ -29,6 +29,7 @@
   <a href="/user/messages">View all unread</a> |
   <a href="/user/messages/sent">View all sent</a> |
     <a href="/user/messages/all">View all</a></h4>
+    <hr>
     @foreach (var message in Model["messageList"])
     {
       foreach (var sender in Model["userList"])
@@ -36,9 +37,12 @@
         if (message.SenderId == sender.Id)
         {
           senderName = sender.UserName;
+          <img src="@sender.GetProfilePhoto().Url" alt="profile picture" id="listPic" class="small-picture"/>
+          <h4 class="block"><a href="/user/messages/@message.Id">From: @senderName</a></h4>
+          <br>
         }
       }
-      <h3><a href="/user/messages/@message.Id">From: @senderName</a></h3>
+
     }
 
 </div>
