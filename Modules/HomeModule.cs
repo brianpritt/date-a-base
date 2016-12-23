@@ -125,7 +125,7 @@ namespace DateABase
         currentUser.Delete();
         Dictionary<string, object> model = new Dictionary<string, object>();
         model.Add("message", "Profile Deleted!");
-        return View["index.cshtml"];
+        return View["index.cshtml", model];
       };
       Get["/user/delete/cancel"]=_=>{
           Dictionary<string, object> model = new Dictionary<string, object>();
@@ -231,7 +231,6 @@ namespace DateABase
       Delete["/user/message/{id}/delete"] = parameters => {
         User currentUser = User.GetCurrentUser();
         Message currentMessage = Message.Find(parameters.Id);
-        Console.WriteLine(currentMessage.Id);
         List<Message> allUnreadMessages = currentUser.GetAllUnreadMessages();
         List<User> allUsers = User.GetAll();
         currentMessage.DeleteMessage();
@@ -399,7 +398,7 @@ namespace DateABase
         }
 
         int index = matchesInts.IndexOf(matchUser.Id);
-        Console.WriteLine(index);
+
         User prevMatch = null;
         if(index == 0)
         {
@@ -424,7 +423,7 @@ namespace DateABase
           matchesInts.Add(match.Id);
         }
 
-        int index = matchesInts.IndexOf(matchUser.Id);        Console.WriteLine(index);
+        int index = matchesInts.IndexOf(matchUser.Id);
         User nextMatch = null;
         if(index == matches.Count-1)
         {
